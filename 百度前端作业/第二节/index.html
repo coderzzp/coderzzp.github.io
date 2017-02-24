@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		ul,li{margin: 0;padding: 0}
+		.area{background-color: #f5f5f5;border: 1px solid #272822;width: 100%;height: 200px;}
+		.menu{position: absolute;width: 50px;border: 1px solid red;background-color: #f2f2f2;}
+		.menu li{border-bottom: 1px solid red;list-style: none;}
+		.menu li:hover{color: #fff;background: #272822}
+	</style>
+</head>
+<body>
+	<div class="area">非自定义菜单区域</div>
+	<ul class="menu">
+		<li>复制</li>
+		<li>粘贴</li>
+		<li>剪裁</li>
+	</ul>
+</body>
+<script type="text/javascript">
+window.onload=function(){
+	var oArea=document.getElementsByClassName("area")[0];
+	var oMenu=document.getElementsByClassName("menu")[0];
+	var aLi=oMenu.getElementsByTagName("li")
+	var style=oMenu.style;
+	style.display="none";
+	document.oncontextmenu=function(event){
+		var maxL,maxT
+		var event=event||window.event;
+		style.display="block";
+		var iL=event.clientX;
+		var iT=event.clientY;
+		maxL=document.documentElement.clientWidth-oMenu.offsetWidth;
+		maxT=document.documentElement.clientHeight-oMenu.offsetHeight;
+		iL<0&&(iL=0);
+		iT<0&&(iT=0);
+		iL>maxL&&(iL=maxL);
+		iT>maxT&&(iT=maxT);
+		style.left=iL+"px";
+		style.top=iT+"px";
+		for(var i=0;i<aLi.length;i++){
+			aLi[i].onclick=function(){
+				alert(this.innerHTML)
+			}
+		}
+		return false;
+	}	
+	document.onclick=function(){
+		style.display="none"
+	}
+	oArea.oncontextmenu=function(e){
+		if (e || e.stopPropagation) { 
+			e.stopPropagation(); 
+		} 
+		else { 
+			//才用IE的停止事件冒泡的方法 
+			window.event.CancelBubble = true; 
+		} 
+	}
+}
+</script>
+</html>
