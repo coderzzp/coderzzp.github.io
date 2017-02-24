@@ -3,8 +3,133 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+	<style type="text/css">
+		div.wrap{background: #f5f5f5;width: 400px;height: 200px;margin: 100px auto;}
+		/*背景图定位方式*/
+		.checkbox-img input[type="checkbox"]{
+			display: none;
+		}
+		.checkbox-img label{
+			display: inline-block;
+			width:14px;
+			height: 14px;
+			background-image: url(1.png);
+			background-position: -25px -33px;
+			margin:10px;
+		}
+		.checkbox-img input[type="checkbox"]:checked+label{
+			background-position: -60px -32px;
+		}
+		/*伪元素方式*/
+		.checkbox-style input[type="checkbox"]{
+			display: none;
+		}
+		.checkbox-style label{
+			display: inline-block;
+			width: 12px;
+			height: 12px;
+			border: 1px solid #d9d9d9;
+			margin:10px;
+		}
+		.checkbox-style input[type="checkbox"]:checked+label{
+			border-color:#d73e33;
+			position: relative;
+		}.checkbox-style input[type="checkbox"]:checked+label::before{
+			content: "";
+			width:2px;
+			height: 8px;
+			display: inline-block;
+			background-color: #d73e33;
+			transform:rotate(45deg);
+			position: absolute;
+			left:6px;
+			top: 3px;
+		}
+		.checkbox-style input[type="checkbox"]:checked+label::after{
+			content: '';
+			width: 2px;
+			height: 4px;
+			display: inline-block;
+			background-color: #d73e33;
+			transform: rotate(135deg);
+			position: absolute;
+			left: 2px;
+			top: 5px;
+		}
+			/* 背景图的方式 */
+		.radio-img input[type="radio"] {
+			display: none;
+		}
+		.radio-img label{
+			display: inline-block;
+			width: 16px;
+			height: 16px;
+			background-image: url(1.png);
+			background-position: -24px -10px;
+			margin: 10px;
+		}
+		.radio-img input[type="radio"]:checked+label{
+			background-position: -59px -10px;
+		}
+			/* 伪元素方式 */
+		.radio-style input[type="radio"]{
+			display: none;
+		}
+		.radio-style label{
+			display: inline-block;
+			width: 14px;
+			height: 14px;
+			border: 1px solid #d9d9d9;
+			margin: 10px;
+			border-radius: 50%;
+		}
+		.radio-style input[type="radio"]:checked+label{
+			border-color: #d73e33;
+			position: relative;
+		}
+		.radio-style input[type="radio"]:checked+label::after{
+			content: '';
+			position: absolute;
+			left: 4px;
+			top: 4px;
+			display: inline-block;
+			width: 6px;
+			height: 6px;
+			background-color: #d73e33;
+			border-radius: 50%;
+		}
+	}
+	</style>
 </head>
 <body>
-	百度前端
+	<div class="wrap">
+		<div class="checkbox-img">
+			<input type="checkbox" id="checkbox-1">
+			<label for="checkbox-1"></label>
+			<input type="checkbox" id="checkbox-2">
+			<label for="checkbox-2"></label>
+		</div>
+		<div class="checkbox-style">
+			<input type="checkbox" id="checkbox-3">
+			<label for="checkbox-3"></label>
+			<input type="checkbox" id="checkbox-4">
+			<label for="checkbox-4"></label>			
+		</div>
+		<div class="radio-img">
+			<input type="radio" name="radio-img" id="radio-1">
+			<label for="radio-1"></label>
+			<input type="radio" name="radio-img" id="radio-2">
+			<label for="radio-2"></label>
+		</div>
+		<div class="radio-style">
+			<input type="radio" name="radio-style" id="radio-3">
+			<label for="radio-3"></label>
+			<input type="radio" name="radio-style" id="radio-4">
+			<label for="radio-4"></label>			
+		</div>
+	</div>
 </body>
+<!-- 课后反思：
+用背景图：最大的体验就是便捷，只是需要制作图片
+用微元素：不需要制作图片，相当于用css画一个框和对号/点。 -->
 </html>
