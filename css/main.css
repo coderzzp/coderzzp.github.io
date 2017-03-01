@@ -141,3 +141,9 @@ img{
 address{
 	text-align: right;
 }
+/*修改bootsrap的渐变效果*/
+.progress-bar{
+	  -webkit-transition: width 0s ease;
+       -o-transition: width 0s ease;
+          transition: width 0s ease;
+}

@@ -7,52 +7,41 @@ var setProgress=function(prg){
 }
 var prg=0;
 var timer=0;
-//设置定时器
-// var timer_first=window.setInterval(function(){
-// 	if(prg>=80){
-// 		window.clearInterval(timer_first);
-// 	}	
-// 	else{
-// 		prg++
-// 	}
-// 	setProgress(prg)
-// },100,10)
-// //页面载入后清除
-// window.onload=function(){
-// 	alert("1")
-// 	//先清除第一阶段
-// 	window.clearInterval(timer_first);
-// 	timer_second=window.setInterval(function(){
-// 		if(prg>100){
-// 			prg=100;
-// 			setProgress(prg)
-// 			clearInterval(timer_second)
-// 			$loading.hide()
-// 		}
-// 		else{
-// 			prg++
-// 			setProgress(prg)
-// 		}
-// 	},100)
-// }
-progress(80,100)
+//下面有过程所解决的三个问题
+//1.分两个过程，第二过程(即window.onload之后)开始加速
+progress([80,90],[1,3],100)//
 window.onload=function(){
-	progress(100,80,function(){
+//2.设置一个延迟，不然根本还来不及看到100%效果的实现，页面就sildeup了。这里显然应该用一个匿名函数
+	progress(100,[1,5],30,function(){setTimeout(function(){
 		$loading.slideUp()
-	})
+	},1000)})
 }
 //封装后的执行函数
-function progress(dist,delay,callback){
-	window.clearInterval(timer)
-	timer=window.setInterval(function(){
-		if(prg>=dist){
-			window.clearInterval(timer)
-			prg=dist;
+function progress(dist,speed,delay,callback){
+	var _dist=random(dist);
+	var _delay=random(delay);
+	var _speed=random(speed);
+	window.clearInterval(timer);
+	timer=window.setTimeout(function(){
+		if(prg+_speed>=_dist){
+			window.clearTimeout(timer)
+			prg=_dist;
 			callback&&callback()
+		}else{
+			prg+=_speed
+			progress(dist,speed,delay,callback)
 		}
-		else{
-			prg++
-		}
-		setProgress(prg)
-	},delay)
+		setProgress(parseInt(prg))
+		console.log(prg)
+	},_delay)
+}
+//3.随机函数，让进度条保持动态的
+function random (n) {
+  if (typeof n === 'object') {
+    var times = n[1] - n[0]
+    var offset = n[0]
+    return Math.random() * times + offset
+  } else {
+    return n
+  }
 }
