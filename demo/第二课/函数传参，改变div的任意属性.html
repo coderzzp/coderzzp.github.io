@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>函数传参，改变div的任意属性</title>
+<style>
+*{margin:0;padding:0;font-size:12px;}
+input{padding:5px;}
+p{margin:10px;}
+#nav{margin:0 auto;width:280px;}
+#div1{width:200px;height:200px;background:#000000;position:relative;top:0;left:50px;}
+button{position:relative;top:0;left:50px;margin-right:10px;cursor:pointer;}
+</style>
+</head>
+
+<body>
+<div id="nav">
+	<p>属性名：<input type="text"  value="background"/></p>;
+    <p>属性值：<input type="text"  value="blue"/></p>
+    <p><button id="sure">确认</button><button id="reset">重置</button></p>
+	<div id="div1"></div>
+</div>
+<script>
+window.onload=function(){
+	var oinput=document.getElementsByTagName("input")
+	var obtn=document.getElementsByTagName("button")
+	var odiv=document.getElementById("div1")
+	var changestyle=function(elem,att,val){
+			elem.style[att]=val
+	}
+	obtn[0].onclick=function(){
+		changestyle	(odiv,oinput[0].value,oinput[1].value)
+	}
+	obtn[1].onclick=function(){
+		odiv.removeAttribute("style");
+	}
+}
+</script>
+</body>
+</html>
+    <!--改变属性函数：var changeStyle = function (elem, name, value) {elem.style[name] = value}
+    	重置采用了removeAttribute("属性名称")方法，removeAttributeNode同样删除属性，但有返回值

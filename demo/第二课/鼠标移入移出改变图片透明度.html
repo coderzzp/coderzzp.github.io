@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>鼠标移入移出改变图片透明度</title>
+<style>
+*{padding:0;margin:0 auto;}
+#imglist{width:700px;margin:0 auto;overflow:hidden;border:1px solid #000;margin-top:10px;padding-bottom:10px;padding-left:10px}
+#imglist li{float:left;list-style:none;border:1px solid #ccc;margin:10px 10px 0 0}
+#imglist img{cursor:crosshair;opacity:0.3}
+#imglist li.current img{opacity:1;}/*注意opacity是不透明度,还有这里注意改变相同元素的opacity*/
+<ul>
+</style>
+</head>
+
+<body>
+<ul id="imglist">
+	<li class>
+    	<img src="images/1.jpg">
+    </li>
+    <li class>
+    	<img src="images/1.jpg">
+    </li>
+    <li class>
+    	<img src="images/1.jpg">
+    </li>
+    <li class>
+    	<img src="images/1.jpg">
+    </li>
+    <li class>
+    	<img src="images/1.jpg">
+    </li>
+    <li class>
+    	<img src="images/1.jpg">
+    </li>
+    <li class>
+    	<img src="images/1.jpg">
+    </li>
+    <li class>
+    	<img src="images/1.jpg">
+    </li>
+    <li class>
+    	<img src="images/1.jpg">
+    </li>
+    <li class>
+    	<img src="images/1.jpg">
+    </li>
+</ul>
+<script>
+window.onload=function(){
+	var oli=document.getElementsByTagName("li");
+	for(var i=0;i<oli.length;i++){
+		oli[i].onmouseover=function(){
+			this.className="current"	
+		}
+		oli[i].onmouseout=function(){
+			this.className=""	
+		}
+	}
+}
+</script>
+</body>
+</html>

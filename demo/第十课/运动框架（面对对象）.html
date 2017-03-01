@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>运动框架</title>
+<style>
+body,div{margin:0;padding:0;}
+#wrap{width:500px;margin:10px auto;}
+.box{position:relative;height:100px;border:1px solid #666;margin-top:10px;}
+.box span{position:absolute;top:10px;left:10px;width:20px;height:20px;background:#999;display:block;opacity:1;}
+</style>
+</head>
+
+<body>
+<div id="wrap">
+    <input type="button" value="开始" />
+    <div class="box"><span></span></div>
+</div>
+<script>
+var Animate=function(oElement,options,callback){
+	this.initialize.apply(this,arguments)
+};
+Animate.prototype={
+	initialize:function(oElement,options,callback){
+		var oThis=this;
+		//开始初始化一些对象并把他们赋值为this对象的属性
+		this.options=options;
+		this.callback=callback;
+		this.oElement=typeof oElement==="string"?document.getElmentById(oElement):oElement;
+		clearInterval(this.timer);
+		this.timer=setInterval(function(){
+			oThis.doMove()
+		},30)
+	},
+	css:function(attr,value){
+		if(arguments.length==1){
+			return parseFloat(this.oElement.currentStyle?this.oElement.currentStyle[attr]:getComputedStyle(this.oElement,null)[attr])
+		}
+		else if(arguments.length==2){
+			attr=="opacity"?(this.oElement.style.opacity=value/100):this.oElement.style[attr]=value +"px"
+		}
+	},
+	doMove:function(){
+		var opt=this.options;
+		var bComplete=true;
+		for (var p in opt){
+			var iCur=p=="opacity"?parseInt(this.css(p).toFixed(2)*100):this.css(p);
+			var iSpeed=(opt[p]-iCur)/5;
+			var iSpeed=iSpeed>0?Math.ceil(iSpeed):Math.floor(iSpeed);
+
+			opt[p]==iCur||(bComplete=false,this.css(p,iCur+iSpeed))
+		}
+		bComplete&&(clearInterval(this.timer),this.callback&&this.callback(this))
+	}
+};
+window.onload=function(){
+	var oSpan=document.getElementsByTagName("span")[0];
+	var oInput=document.getElementsByTagName("input")[0];
+		var aData = [
+		{width:20, height:20},
+		{width:80, height:80},
+		{left:10}, {left:408},
+		{opacity:100},
+		{opacity:0},
+		{opacity:100},
+		{width:80, height:80, left:408},
+		{top:10},
+		{width:20, height:20, left:468},
+		{top:70},
+		{left:10},
+		{top:10},
+		{left:468},
+		{width:20, height:20, left:468},
+		{width:80, height:80, left:408}
+	];
+	var bOrder=true;
+	var i=0;
+	oInput.onclick=function(){
+		var oThis=this;
+		oThis.disabled=true;
+		function begin(){
+			bOrder?i++:i--;
+			var obj=new Animate(oSpan,aData[i],begin);
+			if(i==aData.length||i<0){
+				clearInterval(obj.timer);
+				bOrder=!bOrder;
+				oThis.value=bOrder?"开始":"原路返回"
+				oThis.disabled=false;
+				return
+			}
+		}
+		begin()
+	};
+	oInput.onfocus=function(){
+		this.blur();
+	}
+}
+//开始定义一个动画对象
+// var Animate=function(oElement,options,callback){
+// 	this.initialize.apply(this,arguments)
+// }
+// Animate.prototype={
+// 	initialize:function(oElement,options,callback){
+// 		var oThis=this;
+// 		this.options=options;
+// 		this.callback=callback;
+// 		this.oElement=oElement;
+// 		clearInterval(this.timer);
+// 		this.timer=setInterval(function(){
+// 			oThis.doMove();
+// 		},30)
+// 	},
+// css: function (attr, value)
+// 	{
+// 		if (arguments.length == 1)
+// 		{
+// 			return parseFloat(this.oElement.currentStyle ? this.oElement.currentStyle[attr] : getComputedStyle(this.oElement, null)[attr])
+// 		}
+// 		else if (arguments.length == 2)
+// 		{
+// 			attr == "opacity" ? (this.oElement.style.filter = "alpha(opacity=" + value + ")", this.oElement.style.opacity = value / 100) : this.oElement.style[attr] = value + "px"
+// 		}
+// 	},
+// 	doMove: function ()
+// 	{
+// 		var opt = this.options;
+// 		var bComplete = true;		
+// 		for (var p in opt)
+// 		{
+// 			var iCur = p == "opacity" ? parseInt(this.css(p).toFixed(2) * 100) : this.css(p);
+// 			var iSpeed = (opt[p] - iCur) / 5;
+
+// 			opt[p] == iCur || (bComplete = false, this.css(p, iCur + iSpeed))
+// 		}
+// 		bComplete && (clearInterval(this.timer), this.callback && this.callback.call(this))
+// 	}
+// }
+// window.onload=function(){
+// 	var oSpan=document.getElementsByTagName("span")[0];
+// 	var oInput=document.getElementsByTagName("input")[0];
+// 	//定义一个按顺序来的数组对象
+//  	var aData=[
+// 		{width:20, height:20},
+// 		{width:80, height:80},
+// 		{left:10}, {left:408},
+// 		{opacity:100},
+// 		{opacity:0},
+// 		{opacity:100},
+// 		{width:80, height:80, left:408},
+// 		{top:10},
+// 		{width:20, height:20, left:468},
+// 		{top:70},
+// 		{left:10},
+// 		{top:10},
+// 		{left:468},
+// 		{width:20, height:20, left:468},
+// 		{width:80, height:80, left:408}
+// 	];
+// 	//定义顺/逆按钮
+// 	var bOrder=true;
+// 	var i=0;
+// 	oInput.disabled=false;
+// 	oInput.onclick=function(){
+// 		oInput.disabled=true;
+// 		function begin(){
+// 			bOrder?i++:i--;
+// 			var obj=new Animate(oSpan,aData[i],begin);
+// 			//如果执行到终点了
+// 			if(i==aData.length||i<0){
+// 				clearInterval(obj.timer)
+// 				oInput.disabled=false;
+// 				bOrder=!bOrder;
+// 				oInput.value=bOrder?"开始":"原路返回"
+// 				return;
+// 			}
+// 		}
+// 		begin()
+// 	}
+// }
+//算是一个连续运动对象的构建。点击后每次new一个新的Animate去执行aData对象数组中的一个对象，执行完成后callback，此时这个callbeck就是begin()对象，继续新一轮对aData的操作。。。最后当aData中的任务呗执行完后，清楚运动timer（节省资源），并且将可以控制方向的bOrder设置为反。设置input的内容并且使其可点击化。
+</script>
+</body>
+</html>

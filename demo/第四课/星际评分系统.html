@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>星级评分系统</title>
+<style>
+*{padding:0;margin:0;color:#333333;font-size:12px;}
+#star{width:600px;position:relative;margin:10px auto;}
+li{list-style:none;float:left;background:url(images/star.png) no-repeat;text-indent:-9999px;width:24px}
+/*这里要把两个标签都改为行内元素，并且设置左浮动*/
+ul,span{display:inline;float:left;height:19px;line-height:19px}
+#star li.on{background-position:0 -28px}
+em{display:block;color:#FF6600}
+p{position:absolute;top:20px;width:159px;height:60px;display:block;background:url(images/icon.gif) no-repeat;padding:10px}
+</style>
+
+
+</head>
+
+<body>
+<div id="star">
+	<span>点击星星就能打分</span>
+    <ul>
+    	<li class="">
+        	<a href="javascript:;">1</a>
+        </li>
+        <li class="">
+        	<a href="javascript:;">2</a>
+        </li>
+        <li class="">
+        	<a href="javascript:;">3</a>
+        </li>
+        <li class="">
+        	<a href="javascript:;">4</a>
+        </li>
+        <li class="">
+        	<a href="javascript:;">5</a>
+        </li>
+    </ul>
+    <span>
+    	<strong>1分</strong>
+     质量不好
+    </span>
+    <p>
+    	<em>
+        	<b>1</b>
+            分，不满意
+        </em>
+        质量不好
+    </p>
+</div>
+<script>
+window.onload=function(){
+	var ostar=document.getElementById("star");
+	var oli=ostar.getElementsByTagName("li");
+	var oul=ostar.getElementsByTagName("ul")[0];
+	var ospan=ostar.getElementsByTagName("span")[1];
+	var op=ostar.getElementsByTagName("p")[0]
+	var i=iscore=istar=0;
+	var omsg=[
+					"很不满意|差得太离谱，与卖家描述的严重不符，非常不满",
+					"不满意|部分有破损，与卖家描述的不符，不满意",
+					"一般|质量一般，没有卖家描述的那么好",
+					"满意|质量不错，与卖家描述的基本一致，还是挺满意的",
+					"非常满意|质量非常好，与卖家描述的完全一致，非常满意"
+			 ]
+	for(i=1;i<=oli.length;i++){
+		oli[i-1].index=i;
+		oli[i-1].onmouseover=function(){
+			fnpoint(this.index);
+			op.style.display="block";
+			op.style.left=oul.offsetLeft+this.index*this.offsetWidth-104+"px"
+			op.innerHTML="<em><b>"+this.index+"</b>分"+omsg[this.index-1].match(/(.+)\|/)[1]+"</em>"+omsg[this.index-1].match(/\|(.+)/)[1]//这里注意match后的对象是一个类数组，因为有（）的存在，所以选中括号里的内容应选择第二个数组
+		};
+		//鼠标一开后回复上次评分
+		oli[i-1].onmouseout=function(){
+			fnpoint();
+			op.style.display="none"
+		}
+		//点击后进行评分处理
+		oli[i-1].onclick=function(){
+			istar=this.index;
+			op.style.display="none"
+			ospan.innerHTML="<strong>"+(this.index)+"分<strong>("+omsg[this.index-1].match(/\|(.+)/)[1]+")"
+		}
+		//评分处理（精髓就在于这个||符号，仔细体会,并且后面的for循环给所有小于选中星星都加了“on”这个class）
+		function fnpoint(iarg){
+			iscore=iarg||istar
+			for(i=0;i<oli.length;i++)oli[i].className=i<iscore?"on":"";
+		}
+	}
+}
+</script>
+</body>
+</html>

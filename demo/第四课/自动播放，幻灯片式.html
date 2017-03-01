@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>自动播放，幻灯片式广告</title>
+<style>
+*{margin: 0;padding:0;}
+body{background: #000}
+#box{position: relative;width: 492px;height: 172px;margin: 10px auto;border: 8px solid #FFFFFF;border-radius: 5px;}
+.list{position: relative;}
+.list li{position: absolute;top: 0;left: 0;}
+img{width: 490px;height: 170px;border:1px solid #CCCCCC;}
+li{list-style:none;}
+.count{position:absolute;right:0;bottom:5px}
+.count li{float:left;width:20px;height:20px;border-radius:20px;color:#FFFFFF;background:#FF6600;margin-right:5px;text-align:center;opacity:0.7;cursor:pointer}
+.count li.current{opacity:1}
+/**{margin:0;padding:0}
+body{background:#000000}
+#box{position:relative;width:492px;height:172px;margin:10px auto;border:8px solid #FFFFFF;border-radius:5px}
+.list{position:relative;}
+.list li{position:absolute;top:0;left:0;}
+img{width:490px;height:170px;border:1px solid #CCCCCC}
+li{list-style:none}
+.count{position:absolute;right:0;bottom:5px}
+.count li{float:left;width:20px;height:20px;border-radius:20px;color:#FFFFFF;background:#FF6600;margin-right:5px;text-align:center;opacity:0.7;cursor:pointer}
+.count li.current{opacity:1}*/
+</style>
+</head>
+
+<body>
+<div id="box">
+	<ul class="list">
+		<li class="current">
+			<img src="images/01.jpg" width="490" height="170">
+		</li>
+		<li >
+			<img src="images/02.jpg" width="490" height="170">
+		</li>
+		<li >
+			<img src="images/03.jpg" width="490" height="170">
+		</li>
+		<li >
+			<img src="images/04.jpg" width="490" height="170">
+		</li>
+		<li >
+			<img src="images/05.jpg" width="490" height="170">
+		</li>
+	</ul>
+	<ul class="count">
+		<li class="current">1</li>
+		<li>2</li>
+		<li>3</li>
+		<li>4</li>
+		<li>5</li>
+	</ul>
+</div>
+<!-- <div id="box">
+	<ul class="list">
+    	<li class="current" style="opacity:1">
+        	<img src="images/01.jpg">
+        </li>
+        <li class style="opacity:0">
+        	<img src="images/02.jpg">
+        </li>
+        <li class style="opacity:0">
+        	<img src="images/03.jpg">
+        </li>
+        <li class style="opacity:0">
+        	<img src="images/04.jpg">
+        </li>
+        <li class style="opacity:0">
+        	<img src="images/05.jpg">
+        </li>
+    </ul>
+    <ul class="count">
+    	<li class="current">1</li>
+        <li class>2</li>
+        <li class>3</li>
+        <li class>4</li>
+        <li class>5</li>
+    </ul>
+</div> -->
+<script>
+var obox=document.getElementById("box");
+var oul=document.getElementsByTagName("ul");
+var oimg=oul[0].getElementsByTagName("li")
+var onum=oul[1].getElementsByTagName("li")
+var index=0
+var timer=play=null
+obox.onmouseover=function(){
+	clearInterval(play)
+}
+obox.onmouseout=function(){
+	autoplay();
+}
+function autoplay(){
+	play=setInterval(function(){
+		index++;
+		index>oimg.length-1&&(index=0);
+		show(index);
+	},2000)
+}
+autoplay();
+function show(a){
+	var index=a;
+	var op=0
+	for(i=0;i<onum.length;i++)onum[i].className="";
+	console.log(index)
+	onum[index].className="current";
+	clearInterval(timer);
+	for(var i=0;i<oimg.length;i++){
+		oimg[i].style.opacity=0;
+	}
+	timer=setInterval(function(){
+		op+=0.02;
+		op>1&&(op=1);
+		oimg[index].style.opacity=op;
+		op==1&&clearInterval(timer)
+	},20)
+}
+// var obox=document.getElementById("box");
+// var oul=document.getElementsByTagName("ul");
+// var oimg=oul[0].getElementsByTagName("li")
+// var onum=oul[1].getElementsByTagName("li")
+// var index=0
+// var timer=play=null
+// for(i=0;i<onum.length;i++){
+//     onum[i].index=i;
+// 	onum[i].onmouseover=function(){
+// 		show(this.index)
+// 	}
+// }
+// //鼠标只要滑过页面任何地方，关闭定时器
+// obox.onmouseover=function(){
+// 	clearInterval(play)
+// }
+// //鼠标离开启动自动播放
+// obox.onmouseout=function(){
+// 	autoplay()
+// }
+// //自动播放函数
+// function autoplay(){
+// 	 play=setInterval(function(){
+// 		 index++	
+// 		 index>=oimg.length&&(index=0)
+// 		 show(index)
+// 	 },2000)
+// }
+// autoplay()
+
+// //图片切换，淡入淡出效果
+// function show(a){
+// 	index=a;
+// 	var op=0
+// 	for(i=0;i<onum.length;i++)onum[i].className="";
+// 	onum[index].className="current";
+// 	clearInterval(timer)
+// 	for(i=0;i<oimg.length;i++){
+// 		oimg[i].style.opacity=0;
+// 	}
+// 	timer=setInterval(function(){
+// 		op+=0.02
+// 		console.log(op)
+// 		op>1&&(op=1)//这里注意需要加括号
+// 		oimg[index].style.opacity=op;
+// 		op==1&&clearInterval(timer)
+// 	},20)
+// }
+</script>
+</body>
+</html>

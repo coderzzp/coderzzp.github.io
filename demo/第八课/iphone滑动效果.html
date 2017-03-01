@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>iphone解锁效果</title>
+	<style>
+		#iphone{position: relative;width: 426px;height: 640px;margin: 10px auto;background: url(images/1.jpg) no-repeat;}
+		#lock{position: absolute;;left:50%;bottom: 33px;width: 358px;height: 62px;margin-left: -179px;}
+		#lock span{position: absolute;;width: 93px;height: 62px;cursor: pointer;background: url(images/btn.jpg) no-repeat;}
+	</style>
+</head>
+<body>
+	<div id="iphone">
+		<div id="lock">
+			<span></span>
+		</div>
+	</div>
+<script>
+	var iphone=document.getElementById("iphone")
+	var olock=document.getElementById("lock")
+	var obtn=olock.getElementsByTagName("span")[0];
+	var disx=0;
+	var maxl=olock.offsetWidth-obtn.offsetWidth;
+	var obg=document.createElement("img")
+	obg.src="http://fgm.cc/iphone/2.jpg";
+	obtn.onmousedown=function(e){
+		var e=e||window.event;
+		disx=e.clientX
+		document.onmousemove=function(e){
+			var e=e||window.event;
+			var l=e.clientX-disx;
+			l<0&&(l=0);
+			l>maxl&&(l=maxl);
+			obtn.style.left=l+"px";
+			obtn.offsetLeft==maxl&&(iphone.style.background="url("+obg.src+")",olock.style.display="none");
+			return false;
+		};
+		document.onmouseup=function(){
+			document.onmousemove=null;
+			document.onmouseup=null;
+			obtn.releaseCapture&&obtn.releaseCapture()
+			obtn.offsetLeft>maxl/2?
+			startmove(maxl,function(){
+				iphone.style.background="url("+obg.src+")";
+				olock.style.display="none"
+			}):
+			startmove(0);
+		}
+		this.setCapture&&this.setCapture()
+		return false;
+	}
+	function startmove(itarget,onend){
+		clearInterval(obtn.timer);
+		obtn.timer=setInterval(function(){
+			domove(itarget,onend)
+		},30)
+	}
+	function domove(itarget,onend){
+		var ispeed=(itarget-obtn.offsetLeft)/5;
+		itarget==obtn.offsetLeft?(clearInterval(obtn.timer),onend&&onend()):obtn.style.left=ispeed+obtn.offsetLeft+"px"
+	}
+</script>
+</body>
+</html>

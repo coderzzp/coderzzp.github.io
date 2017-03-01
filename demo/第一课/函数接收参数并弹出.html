@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>函数接受参数并弹出</title>
+<style>
+.nav{margin:10px auto;width:175px;}
+#btn{text-align:center;}
+</style>
+</head>
+
+<body>
+<p class="nav"><input type="text" value="北京市"/></p>
+<p class="nav"><input type="text" value="昭阳区"/></p>
+<p class="nav" id="btn"><input type="button" value="提交"/></p>
+<script>
+	var ler=function(a,b){
+		alert(a.value);	
+		alert(b.value);
+	}
+	
+		var obtn=document.getElementById("btn");
+		var oput=document.getElementsByTagName("input")
+		obtn.onclick=function(){
+			ler(oput[0],oput[1]);	
+		}
+			
+</script>
+</body>
+</html>
+<!--注意getElements得到的是数组-->

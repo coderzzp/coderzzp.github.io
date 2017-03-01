@@ -1,0 +1,64 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style>
+*{padding:0px;margin:0 auto;font-size:12px;color:#FFFFFF}
+li{list-style:none;}
+a{text-decoration:none;}
+#outer{margin:0 auto;width:500px;text-align:center;}
+#skin,#nav{overflow:hidden;}
+#skin{margin:10px 0;}
+#nav{width:500px;height:23px;border:1px solid #FFFFFF;}
+#skin li{float:left;width:6px;height:6px;border-width:4px;border-style:solid;margin-right:10px;cursor:pointer;}
+#nav li{float:left;width:82px;height:23px;line-height:23px;border-right:1px solid #fff;}
+#red{border-color:red;background:red;}
+#green{border-color:green;background:green;}
+#black{border-color:black;background:black;}
+/*接下来current*/
+#skin li.current{background-color:#FFFFFF;!important;}
+
+
+</style>
+<link href="red.css" rel="stylesheet" type="text/css"
+</head>
+
+<body>
+<div id="outer">
+	<ul id="skin">
+    	<li id="red" title="红色" ></li>
+        <li id="green" title="绿色" ></li>
+        <li id="black" title="黑色" ></li>
+    </ul>
+    <ul id="nav">
+    	<li><a href="javascript:;">新闻</a></li>
+        <li><a href="javascript:;">娱乐</a></li>
+        <li><a href="javascript:;">体育</a></li>
+        <li><a href="javascript:;">电影</a></li>
+        <li><a href="javascript:;">音乐</a></li>
+        <li><a href="javascript:;">旅游</a></li>
+    </ul>
+</div>
+<script>
+	window.onload=function(){
+		var oskin=document.getElementById("skin").getElementsByTagName("li");
+		var olink=document.getElementsByTagName("link")[0];
+		for (var i=0;i<oskin.length;i++){
+			oskin[i].onclick=function(){
+				for(var p in oskin)oskin[p].className="";
+				<!--注意：这里一开始犯错用了oskin[i]而不是this，导致函数错误-->
+				this.className="current";
+				olink['href']=this.id+".css";
+			}
+		}
+	}
+
+
+</script>
+</body>
+</html>
+<!--通过JS控制DOM并为其增加类名，以改变其样式。<link>链接一个外部样式表，并通过在事件上操作link的属性href值来改变css样式指向；
+	
+	

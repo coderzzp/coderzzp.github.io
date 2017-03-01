@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style>
+body,div,span{margin:0 auto;padding:0px;}
+body{
+	background:#fff;
+	color:#b35208;
+	font-family:微软雅黑；
+}
+.wrapper { background:url(images/bg.png) no-repeat;width:800px;height:400px;padding:80px;margin:0,auto;}
+.score {margin: 10px auto;text-align: center;font-size:30px;font-weight:bold;}
+.line{height:40px;}
+.col { width: 40px; height: 40px;display: inline-block;float:left;}
+.snake{background:url(images/box.png) no-repeat;width:40;height:40px;background-size:100% 100%;}
+.egg{background:url(images/circle.png) no-repeat;width:40;height:40px;background-size:100% 100%;}
+.gameover{position:fixed;;width:408px;height:108px;left:50%;top:50%;margin-left:-204px;margin-top:-54px;opacity:0;transform:scale(0); transition:all .3s;}
+.show{opacity:1; transform:scale(1);}
+</style>
+
+</head>
+
+<body>
+<div class="gameover" id="gameover">
+	<img src="images/gameover.png"/>
+</div>
+<div class="score">得分: 0</div>
+<div class="wrapper"></div>
+
+</body>
+<script type="text/javascript">
+var scorediv = document.querySelector(".score");
+var score=0;
+var snakelength=3;
+var rows = 10; //行 
+var cols = 20; //列 
+var snakearr = [];
+var snakebody = [];//存储所有对象,即创建了一个容器
+var changedir=true;
+var direction="right";//设置初始方向
+var time=300;
+
+function createModel(){//创建基础
+	var wrapperdiv = document.querySelector(".wrapper");
+	for(var i = 0; i < rows; i++) { 
+		var rowdiv = document.createElement("div");
+		var rowarr = [];
+		for(var j = 0; j < cols; j++) {
+			var coldiv = document.createElement("div");
+			coldiv.className = "col";
+			rowarr.push(coldiv);
+			rowdiv.appendChild(coldiv);
+		}
+		snakearr.push(rowarr);
+		wrapperdiv.appendChild(rowdiv);
+	}
+}
+function snake() {
+	for(var i = 0; i < snakelength; i++) {
+		snakearr[0][i].className = "col snake";
+		snakebody.push(snakearr[0][i]);
+	}
+}
+createModel()
+snake()
+//控制方法
+document.onkeydown=function(event){
+	event=event||window.event;
+	if(!changedir) { 
+		return; //表示直接结束函数，后续代码不执行 
+	} 
+	//假设蛇在向右移动，按键左右都不起作用 
+	if(direction == "right" && event.keyCode == "37") {
+		return;
+	}
+	if(direction == "left" && event.keyCode == "39") {
+		return;
+	} 
+	if(direction == "down" && event.keyCode == "38") {
+		return;
+	}
+	if(direction == "up" && event.keyCode == "40") {
+		return;
+	} 
+	switch(event.keyCode){
+		case 37: 
+			direction = "left"; //方向向左 
+			break; 
+		case 38: 
+			direction = "up"; 
+			break;
+		case 39:
+			direction = "right";
+			break;
+		case 40: 
+			direction = "down";
+			break;	
+	}
+	//设置按键延迟
+	changeDir = false;
+	var delayTime = setTimeout(function() {
+		changeDir = true;
+		clearTimeout(delayTime);
+	}, time);
+}
+//蛇的移动
+var x = 2; 
+var y = 0;
+function snakemove(){
+	 var snaketimer=setInterval(function(){
+		switch(direction) {
+			case "right":
+				x++;
+				break;
+			case "left":
+				x--;
+				break;
+			case "up":
+				y--;
+				break;
+			case "down":
+				y++;
+				break;
+		}
+		//开始判断是否碰到墙壁
+		if(x<0||x>=cols||y<0||y>=rows){
+			document.getElementById("gameover").className = "gameover show";
+			clearInterval(snaketimer);
+			return;
+		}
+		//判断是否吃到自己
+		for(var i=0;i<snakebody.length;i++){
+			if(snakebody[i]==snakearr[y][x]){
+				document.getElementById("gameover").className = "gameover show";
+				clearInterval(snaketimer);
+				return;	
+			}
+		}
+		//判断蛇头位置是否有蛋
+		if(eggx == x && eggy == y){
+			snakearr[eggy][eggx].className = "col snake";
+			snakebody.push(snakearr[eggy][eggx])
+			score++;
+			scorediv.innerHTML = "得分:" + score;
+			food();
+		}else{
+			//把最后面的尾巴扔掉
+			snakebody[0].className = "col";
+			snakebody.shift();
+			//蛇向前走
+			snakearr[y][x].className = "col snake";
+			snakebody.push(snakearr[y][x]);
+			
+		}	
+	},time)
+}
+snakemove();
+
+
+
+
+
+
+
+
+
+
+//建立随机函数帮助生成egg
+function randomnum(num){
+	var ran=Math.floor(Math.random()*num);
+	return ran;	
+}
+var eggx=0;
+var eggy=0;
+//生成egg位置
+function food(){
+	eggx=randomnum(cols);
+	eggy=randomnum(rows);
+	if(snakearr[eggy][eggx].className == "col snake") {
+		food(); //重新生成 
+	} else {
+	//否则 新生生蛋的位置并改样式
+		snakearr[eggy][eggx].className = "col egg";
+	}
+}
+food()
+</script>
+</html>

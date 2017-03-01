@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>仿苹果电脑任务栏菜单</title>
+<style>
+body{margin:0;padding:0}
+#menu{position:absolute;width:100%;bottom:0;text-align:center}//注意这里宽度是集成body宽度，高度自行根据内容撑开
+</style>
+</head>
+
+<body>
+<div id="menu">
+	<img src="img/1.png">
+    <img src="img/2.png">
+    <img src="img/3.png">
+    <img src="img/4.png">
+    <img src="img/5.png">
+    <img src="img/6.png">
+</div>
+
+</body>
+<script>
+window.onload=function(){
+	var oMenu=document.getElementById("menu");
+	var aImg=oMenu.getElementsByTagName("img");
+	var aWidth=[];//保存元宽度的数组
+	var i=0;
+	//保存元宽度，并设置当前宽度
+	for(i=0;i<aImg.length;i++){
+		aWidth.push(aImg[i].offsetWidth);//这里一开始不理解offsetWidth和width的区别，后来明白这两个的只读写属性不同
+		aImg[i].width=parseInt(aImg[i].offsetWidth/2);
+	}
+	//鼠标移动时间
+	document.onmousemove=function(event){
+		var event=event||window.event;
+		for(i=0;i<aImg.length;i++){
+			var a=event.clientX-aImg[i].offsetLeft-aImg[i].offsetWidth/2;
+			var b=event.clientY-aImg[i].offsetTop-oMenu.offsetTop-aImg[i].offsetHeight/2;
+			var iScale=1-Math.sqrt(a*a+b*b)/300;
+			if(iScale<0.5)iScale=0.5;
+			aImg[i].width=aWidth[i]*iScale;
+		}	
+	}
+}
+</script>
+</html>

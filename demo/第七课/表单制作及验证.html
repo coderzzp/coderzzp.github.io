@@ -1,0 +1,208 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>表单制作</title>
+<style>
+body,div,input,h3,span{
+    margin:0 auto;
+	padding:0px;
+}
+body{
+	font-size:14px
+	font-family:"微软雅黑";
+	background:#F3F3F3;
+}
+.line{
+	padding:10px 0;
+	position:relative;
+}
+.wrapper{
+	margin:20px;
+	padding:20px 30px;
+	background:#FFFFFF;
+	border:1px solid #f90
+}
+h3{
+	color:#FF9900;
+	font-size:20px;
+}
+.txt{
+	width:300px;
+	height:50px;
+	border:1px solid #ddd;
+	background:#FFFFFF;
+	padding:0 8px;
+}
+.btn{
+	width:316px;
+	height:50px;
+	border:none;
+	background:#f90;
+	font-size:14px;
+	color:#FFFFFF;
+}
+.hide{display:none}
+.select{
+	position:absolute;
+	left:0;
+	top:62px;
+	width:316px;
+	background:#fff;
+	line-height:30px;
+	z-index:1;
+	border:1px solid #837D7D;
+}
+.select a{
+	display:block;
+	padding-left:20px;
+	padding-top:10px;
+	text-align:20px;
+	height:50px;
+	color:#000000;
+}
+.arrow{
+	position:absolute;
+	left:290px;
+	top:30px;
+	border-left:8px solid transparent;
+	border-right:8px solid transparent;
+	border-top:10px solid #333333;
+}
+.select a:hover{
+	background:#DDDDDD;
+}
+.show{
+	position:fixed;
+	left:50%;
+	top:50%;
+	z-index:1;
+
+}
+.show span{
+	color:#fff;
+    padding-left:5px;
+	text-align:30px;
+}
+.show .bgc{
+	position:absolute;
+	top:0px;
+	left:0px;
+	background:#7C7A7B;
+	width:100%;
+	height:100%;
+	z-index:-1;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+    <h3>玩转表单</h3>
+    <form>
+        <div class="line">
+            <input type="text" name="phone" ID="phone" class="txt" placeholder="请输入账号"/>
+        </div>
+        <div class="line">
+            <label><input type="radio" name="sex" value="1"/>男</label>
+            <label><input type="radio" name="sex" value="0"/>女</label>
+        </div>
+        <div class="line">
+            <label><input type="checkbox"  name="sex" value="1"/>男男</label>
+            <label><input type="checkbox" name="sex" value="0"/>女女</label>
+        </div>
+        <div class="line">
+            <input type="text" name="Email" id="Email" class="txt" placeholder="请输入邮箱号"/>
+        </div>
+        <div class="line">
+              <div class="arrow"></div>
+              <input type="text" readonly id="city" class="txt" placeholder="请选择您所在的城市"/>
+              <div >
+                <select class="ui-reset hide">
+                    <option>北京</option>
+                    <option>上海</option>
+                    <option>西安</option>
+                </select>
+             </div>
+             <!--<div class="select">
+                <a href="#">北京</a>
+                <a href="#">上海</a>
+                <a href="#">西安</a>
+             </div>-->
+        </div>
+        <div class="line">
+            <input type="text" name="password" ID="password" class="txt" placeholder="请输入密码"/>
+        </div>
+        <div class="line">
+            <input type="text" name="checkpassword" ID="checkpassword" class="txt" placeholder="请再次输入密码"/>
+        </div>
+        <div class="line">
+            <input type="submit" value="提交" class="btn" />
+        </div>
+    </form>
+</div>
+ <div class="show hide">
+     <span>1111</span>
+     <div class="bgc"></div>
+ </div>
+<script type="text/javascript">
+	 function showMessage(mes){
+		 if(document.getElementsByClassName("show").length>0){
+			  document.getElementsByClassName("show")[0].style.display="block";
+			  document.getElementsByClassName("show")[0].children[0].textContent=mes;
+			  var time=setTimeout(function(){
+					 document.getElementsByClassName("show")[0].style.display="none";
+				  },1500);
+		 }
+	 }
+     var uiset=document.getElementsByClassName("ui-reset")[0].children;
+	 var divTag=document.createElement("div");
+	 divTag.setAttribute("class","select hide");
+	 for(var i=0;i<uiset.length;i++){
+		 var aTag=document.createElement("a");
+		 aTag.setAttribute("href","javascript:;");
+		 aTag.textContent=uiset[i].textContent;
+		 divTag.appendChild(aTag);
+		 aTag.onclick=function(){
+	         document.getElementById("city").value=this.textContent;
+		     this.parentNode.style.display="none";
+		 }
+	 }
+	document.getElementsByClassName("ui-reset")[0].parentNode.appendChild(divTag)
+	document.getElementById("city").onclick=function(){
+		document.getElementsByClassName("select")[0].style.display="block";
+	}		 
+    document.getElementsByClassName("btn")[0].onclick=function(){
+		var password=document.getElementById("password").value;
+		var checkpassword=document.getElementById("checkpassword").value;
+		var Email=document.getElementById("Email").value;
+		if(!(/^1[345678]{1}\d{9}$/).test(document.getElementById("phone").value)){
+			showMessage("您输入的电话号格式码有误！")
+			return false;
+	    }
+		else if(Email.value==""){
+			showMessage("qq邮箱不能为空")
+			return false;
+		}
+		else if(!(/\w+@\w+\.com/).test(Email)){
+			showMessage("qq邮箱格式不正确！")
+			return false;
+		}
+		else if(document.getElementById("city").value==""){
+			showMessage("您还没有选择城市")
+			return false;
+		}
+		else if(!(/^\w{6,13}$/).test(password)){
+		    showMessage("qq密码为6-13位") 
+			return false;	
+		}
+		else if(checkpassword!=password){
+		    showMessage("两次密码不一致") 
+			return false;	
+		}
+	}
+	
+</script>
+</body>
+</html>

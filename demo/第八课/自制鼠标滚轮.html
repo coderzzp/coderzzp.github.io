@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>自制鼠标滚轮</title>
+<style>
+*{margin:0;padding:0;background:#3e3e3e}
+#box{width:600px;margin:20px auto;}
+.list{position:relative;width:600px;height:144px;margin-bottom:10px;overflow:hidden;}
+.list ul{position:absolute;top:0;left:0;width:1520px;height:144px}
+.list ul li{list-style:none;float:left;width:144px;height:144px;background:#000;margin-right:8px;border-radius:8px;}
+.list ul li img{width:124px;height:100px;border-radius:5px;margin-top:10px;margin-left:10px;}
+.list ul li p{float:left;width:100%;color:#FFFFFF;text-align:center;background:#000;}
+.scrollBar{position:relative;height:19px;background:#000;overflow:hidden;margin-bottom:10px;}
+.scrollBar .barL,.scrollBar .barR,.scrollBar .barLStop,.scrollBar .barRStop{position:absolute;top:0;width:28px;height:19px;cursor:pointer;background:url(img/03.gif) no-repeat;}
+.scrollBar .barL{left:0;}
+.scrollBar .barR{right:0;background-position:right 0;}
+.scrollBar .barLStop{left:0;background-position:0 -19px;cursor:default;}
+.scrollBar .barRStop{right:0;background-position:right -19px;cursor:default;}
+.scrollBar .barM{position:relative;height:15px;margin:0 28px;border:1px solid #545454;border-width:1px 0;padding:1px 0;cursor:pointer;background:#000;z-index:1;}
+.scrollBar .bar{position:absolute;top:1px;left:0;width:150px;height:15px;cursor:e-resize;background:url(img/01.gif) repeat-x;}
+.scrollBar .bar .l,.scrollBar .bar .r{position:absolute;top:0;width:6px;height:15px;background:url(img/02.gif) no-repeat;}
+.scrollBar .bar .l{left:-6px}
+.scrollBar .bar .r{right:-6px;background-position:right 0;}
+#desc{color:#CCCCCC;width:578px;padding:10px;margin:0;line-height:2;border:1px dashed #666666;margin-top:}
+#desc dd{margin-left:2em;}
+
+</style>
+</head>
+
+<body>
+<div id="box">
+	<div class="list">
+    	<ul>
+        	<li>
+            	<img src="img/1.jpg">
+                <p>iphone4</p>
+            </li>
+            <li>
+            	<img src="img/1.jpg">
+                <p>iphone4</p>
+            </li>
+            <li>
+            	<img src="img/1.jpg">
+                <p>iphone4</p>
+            </li>
+            <li>
+            	<img src="img/1.jpg">
+                <p>iphone4</p>
+            </li>
+            <li>
+            	<img src="img/1.jpg">
+                <p>iphone4</p>
+            </li>
+            <li>
+            	<img src="img/1.jpg">
+                <p>iphone4</p>
+            </li>
+            <li>
+            	<img src="img/1.jpg">
+                <p>iphone4</p>
+            </li>
+            <li>
+            	<img src="img/1.jpg">
+                <p>iphone4</p>
+            </li>
+            <li>
+            	<img src="img/1.jpg">
+                <p>iphone4</p>
+            </li>
+            <li>
+            	<img src="img/1.jpg">
+                <p>iphone4</p>
+            </li>
+        </ul>
+    </div>
+    <div class="scrollBar">
+    	<div class="barL"></div>
+        <div class="barM">
+        	<div class="bar">
+            	<div class="l"></div>
+                <div class="r"></div>
+            </div>
+        </div>
+        <div class="barR"></div>
+    </div>
+    <dl id="desc">
+    	<dt>功能说明</dt>
+        <dd>① 拖动滚动条，图片列表缓冲滑动至目标点；</dd>
+        <dd>② 滚动条两端鼠标移入自动滑动；</dd>
+        <dd>③ 滚动条滑动到两端自动更换为停止标识点；</dd>
+        <dd>④ 点击滚动条黑色背景区，滚动条及图片列表缓冲滑动至目标点；</dd>
+    </dl>
+</div>
+<script>
+window.onload=function(){
+	//封装一个获取id，class，tagname的函数
+	var get = {
+		byId: function(id) {
+			return typeof id === "string" ? document.getElementById(id) : id
+		},
+		byClass: function(sClass, oParent) {
+			var aClass = [];
+			var reClass = new RegExp("(^| )" + sClass + "( |$)");
+			var aElem = this.byTagName("*", oParent);
+			for (var i = 0; i < aElem.length; i++) reClass.test(aElem[i].className) && aClass.push(aElem[i]);
+			return aClass
+		},
+		byTagName: function(elem, obj) {
+			return (obj || document).getElementsByTagName(elem)
+		}
+	};
+	/*-------------------------- +
+	  获取最终样式
+	 +-------------------------- */
+	function getStyle(obj, attr)
+	{
+		return parseFloat(obj.currentStyle ? obj.currentStyle[attr] : getComputedStyle(obj, null)[attr])	
+	}
+	var oBox = get.byId("box");
+	var oScrollBar = get.byClass("scrollBar", oBox)[0];
+	var oList = get.byClass("list", oBox)[0];
+	var oUl = get.byTagName("ul", oBox)[0];
+	var aLi = get.byTagName("li", oBox);
+	var oBarL = get.byClass("barL", oScrollBar)[0];
+	var oBarM = get.byClass("barM", oScrollBar)[0];
+	var oBarR = get.byClass("barR", oScrollBar)[0];
+	var oBar = get.byClass("bar", oBarM)[0];
+	var maxL = oBarM.offsetWidth - oBar.offsetWidth;
+	var iMarginRight = getStyle(aLi[0], "marginRight");
+	var timer = null;
+	var iScale = 0;
+	var disX = 0;
+	var i = 0;
+	//拖动滚动条
+	oBar.onmousedown=function(event){
+		var event=event||window.event;
+		disX=event.clientX-oBar.offsetLeft;
+		document.onmousemove=function(event){
+			var event=event||window.event;
+			var iL=event.clientX-disX;
+			iL<=0&&(iL=0);
+			iL>=maxL&&(iL=maxL);
+			oBar.style.left=iL+"px";
+			iScale=iL/maxL;
+			return false;
+		}
+		document.onmouseup=function(){
+			//(oList.offsetWidth+iMarginRight-oUl.offsetWidth这个值本身就是负的
+			startMove(oUl,parseInt((oList.offsetWidth+iMarginRight-oUl.offsetWidth)*iScale));
+			isStop()
+			document.onmousemove=null;
+			document.onmouseup=null;	
+		}
+	}//滚动条左右按钮鼠标移入以及键盘左右键按下事件;
+	oBarL.onmouseover=oBarR.onmouseover=document.onkeydown=function(event){
+		clearInterval(timer);
+		var event=event||window.event;
+		var ispeed=0;
+		if(this==oBarR||event.keyCode==39){
+			iSpeed=5
+		}
+		 else if(this==oBarL||event.keyCode==37){
+			iSpeed=-5
+		}
+		timer=setInterval(function(){
+			togetherMove(getStyle(oBar,"left")+iSpeed,1)	
+		},30)		
+	}
+	oBarL.onmouseout=oBarR.onmouseout=document.onkeyup=function(){
+		clearInterval(timer)	
+	}
+	
+	//判断是否到头，增加bar的classname以改变样式
+	function isStop(){
+		oBarL.className="barL"
+		oBarR.className="barR"
+		switch(oBar.offsetLeft){
+			case 0:
+				/(^|\s)barLStop(\s|$)/.test(oBarL.className)||(oBarL.className+=" barLStop")	;
+			break;
+			case maxL:
+				/(^|\s)barRStop(\s|$)/.test(oBarR.className)||(oBarR.className+=" barRStop")	;
+			break;
+		}	
+	};
+	isStop()
+	//鼠标点击事件移动
+	oBarM.onclick=function(event){
+		var iTarget=(event||window.event).clientX-oBox.offsetLeft-this.offsetLeft-oBar.offsetWidth/2;
+		togetherMove(iTarget)
+	}
+	//鼠标滚轮时间(这里需要注意的是浏览器的兼容性问题)
+	oBox.onmouseover=function(event){
+		event=event||window.event;
+		function mouseWheel(event){
+			var delta=event.wheelDelta?event.wheelDelta:-event.detail*40
+			var iTarget=delta>0?-50:50;
+			togetherMove(oBar.offsetLeft+iTarget)
+		}	
+		addHandler(this,"mousewheel",mouseWheel);
+		addHandler(this,"DOMMouseScroll",mouseWheel);
+	}
+	
+	//图片列表和流动条同时移动
+	function togetherMove(iTarget,buffer){
+		if(iTarget<=0){
+			timer&&clearInterval(timer);
+			iTarget=0;	
+		}
+		else if(iTarget>=maxL){
+			timer&&clearInterval(timer);
+			iTarget=maxL;	
+		}
+		iScale=iTarget/maxL;
+		startMove(oUl,parseInt((oList.offsetWidth+iMarginRight-oUl.offsetWidth)*iScale),function(){isStop()},buffer)
+		startMove(oBar,iTarget,function(){isStop()},buffer)
+	}
+	//解决浏览器兼容性问题的addHandler
+	function addHandler(element,type,handler){
+		return 	element.addEventListener?
+		element.addEventListener(type,handler,false):
+		element.attachEvent("on"+type,handler)
+	}
+	//移动函数satartmove；
+	function startMove(obj,iTarget,fnEnd,buffer){
+		clearInterval(obj.timer);
+		obj.timer=setInterval(function(){
+			doMove(obj,iTarget,fnEnd,buffer)
+		},25)
+	}
+	function doMove(obj,iTarget,fnEnd,buffer){
+		var iLeft=getStyle(obj,"left");
+		var iSpeed=(iTarget-iLeft)/(buffer||5);
+		iLeft==iTarget?(clearInterval(obj.timer),fnEnd&&fnEnd()):obj.style.left=iLeft+iSpeed+"px";
+	}
+}
+//总结：这段代码中要监控的事件很多，那么不着急，一件一件的来完成。其次我认为最重要的，做一些功能模块，是十分重要的事情。这篇里的startMove或者addHandeler，将常用的功能编写成“高内聚（即能认真做好一件事情），低耦合（即可以重复利用）”的模块是十分重要的，以及一些兼容性的问题，虽然很多，很杂，但是确实真实工作中必不可少的一部分。
+</script>
+</body>
+</html>

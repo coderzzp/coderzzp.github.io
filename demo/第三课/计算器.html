@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>计算器</title>
+<style>
+*{margin:0;padding:0;}
+li{list-style:none}
+a{text-decoration:none;}
+/*开始给calc相对定位，给最下面的input定坐标*/
+#calc{position:relative;width:300px;background:url(img/bg.jpg);margin:10px auto}
+#calc p{color:#FFFFFF;padding:0 5px;text-align:right;font:14px/30px;}
+#calc .f-text{border:0;width:290px;height:84px;text-align:right;background:#D5D9B8;font-size:50px;padding:0 5px}
+.clearflow:after{display:block;clear:both;content:"";visibility:hidden;height:0} 
+#calc ul{position:relative;padding:0 0 17px 8px;font-size:26px;}
+#calc ul li{float:left;width:63px;height:41px;margin:17px 10px 0 0;}
+#calc ul li a{display:block;width:63px;height:41px;line-height:41px;text-align:center;background:url(img/btn.png) no-repeat;color:#FFFFFF}
+#calc ul li a:hover{background-position:-63px 0;}
+#calc ul li.btn-1 a{background-position:0 -41px;}
+#calc ul li.btn-1 a:hover{background-position:-63px -41px;}
+#calc ul li.btn-2{position:absolute;top:174px;right:0;height:99px;}
+#calc ul li.btn-2 a{height:99px;line-height:99px;background-position:0 -164px;}
+#calc ul li.btn-2 a:hover{background-position:-63px -164px;}
+#calc ul li.btn-3{width:136px;}
+#calc ul li.btn-3 a{width:136px;background-position:0 -82px;}
+#calc ul li.btn-3 a:hover{width:136px;background-positon:0 -123px;}
+#formula{position:absolute;top:20px;text-align:right;border:0;width:280px;padding:3px 15px 0 5px;background:none;}
+
+</style>
+</head>
+
+<body>
+<div id="calc">
+	<p>BY  -  zzp QQ:740229522</p>
+    <input type="text" class="f-text" readonly maxlength="9" value="0"/>
+	<ul class="clearflow">
+    	<li class="btn-1">
+        	<a href="javascript:;">c</a>
+        </li>
+        <li class="btn-1">
+        	<a href="javascript:;">%</a>
+        </li>
+        <li class="btn-1">
+        	<a href="javascript:;">÷</a>
+        </li>
+        <li class="btn-1">
+        	<a href="javascript:;">×</a>
+        </li>
+        <li >
+        	<a href="javascript:;">7</a>
+        </li>
+        <li >
+        	<a href="javascript:;">8</a>
+        </li>
+        <li >
+        	<a href="javascript:;">9</a>
+        </li>
+        <li class="btn-1">
+        	<a href="javascript:;">-</a>
+        </li>
+        <li >
+        	<a href="javascript:;">4</a>
+        </li>
+        <li >
+        	<a href="javascript:;">5</a>
+        </li>
+        <li >
+        	<a href="javascript:;">6</a>
+        </li>
+        <li class="btn-1">
+        	<a href="javascript:;">+</a>
+        </li>
+        <li >
+        	<a href="javascript:;">1</a>
+        </li>
+        <li >
+        	<a href="javascript:;">2</a>
+        </li>
+        <li >
+        	<a href="javascript:;">3</a>
+        </li>
+        <li class="btn-2">
+        	<a href="javascript:;">=</a>
+        </li>
+        <li class="btn-3">
+        	<a href="javascript:;">0</a>
+        </li>
+        <li >
+        	<a href="javascript:;">.</a>
+        </li>
+    </ul>
+    <input type="text" readonly value="" id="formula">
+</div>
+<script>
+window.onload=function(){
+	 var ocalc=document.getElementById("calc")
+	 var oa=document.getElementsByTagName("a")
+	 var oinput=ocalc.getElementsByTagName("input")[0];
+	 var oformula=document.getElementById("formula");
+	 var s=false//定义一个初始判断时间用于控制事件操作
+	 for(var i=0;i<oa.length;i++){
+		oa[i].onclick=function(){
+			switch(this.innerHTML){
+				case"c":
+					oinput.value=0
+					oformula.value="";
+					break;
+				case"%":
+					count("%");
+					break;
+				case"×":
+					count("*");
+					break;
+				case"-":
+					count("-");
+					break;
+				case"+":
+					count("+");
+					break;
+				case"=":
+					s||(oformula.value+=oinput.value);
+					oinput.value=eval(oformula.value.replace(/\%\/\*\+\-/,''));
+					s="true"
+					break;
+				case".":
+					if(oinput.value.search(/[\.\%\/\*\+\-]/)!=-1)//即前面如果已经在input里输入了+-*/.这几个符号，那么这里的.没有作用
+					break;
+				default:
+					s&&(oinput.value=0,oformula.value="",s="false");//这里的意思是如果之前的操作是=，那么这里输入数字会执行清空操作;
+					oinput.value.length<10&&(oinput.value=(oinput.value+this.innerHTML).replace(/^[0\%\/\*\+\-](\d)/,"$1"))//这里的意思是说如果第一次输入数字或者在运算过程中上一步操作为输入了运算符（即oinput里是运算符），此时oinput全部替换成数字。这里的$1回指正则表达式里第一个组
+			}
+		}
+	}
+	function count(a){
+		if(s){
+			oformula.value=oinput.value+a;
+			oinput.value=a;
+			s=false//这里是设置用第一次计算后的结果（即oinput值）来继续计算的方法
+		}
+		else{
+			/[\%\/\*\+\-]$/.test(oinput.value)||(oformula.value+=oinput.value);//这句的意思是如果之前是输入数字了，然后输入了一个运算符，此时的oinput仍然是数字，那么将数字添加到oformula里面去
+			oinput.value=a;//重新赋予ainput运算符的值
+			/[\%\/\*\+\-]$/.test(oformula.value)||(oformula.value+=oinput.value);//将运算符的值再次加入到formula里面
+			oformula.value=oformula.value.slice(-1)!=a?oformula.value.replace(/.$/,a):oformula.value//如果之前输入过一次运算符，再次输入运算符会更替掉之前的运算符;
+		}
+	}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>完美拖拽</title>
+<style>
+body,div,h2,p{margin:0;padding:0;}
+body{color:#FFFFFF;background:#000000;font:12px;}
+#box{position:absolute;top:50%;left:50%;margin-left:-150px;margin-top:-75px;background:#333;border:2px solid #CCCCCC;width:300px;height:150px}
+#box h2{height:25px;text-align:right;border-bottom:2px solid #ccc;padding:0 10px;backgroud:#222222;font-size:12px;line-height:25px;cursor:move}
+a{text-decoration:none;;color:#FFFFFF;}
+#box p{margin-top:15px;padding-left:10px}
+#box p span{color:#ff0}
+</style>
+</head>
+
+<body>
+<div id="box">
+	<h2>
+    	<a href="javascript:;">点击回放拖动轨迹</a>
+    </h2>
+    <p>
+    	<strong>Drag:</strong>
+        <span>false</span>
+    </p>
+    <p>
+    	<strong>offsettop</strong>
+        <span>250</span>
+    </p>
+    <p>
+    	<strong>offsetleft</strong>
+        <span>250</span>
+    </p>
+</div>
+<script>
+window.onload=function(){
+	var obox=document.getElementById("box");
+	var oh2=obox.getElementsByTagName("h2")[0];
+	var oa=obox.getElementsByTagName("a")[0];
+	var ospan=obox.getElementsByTagName("span");
+	var disX=disY=0;
+	var bdrag=false;
+	var apos=[{x:obox.offsetLeft,y:obox.offsetTop}]
+	//鼠标按下，激活拖拽
+	oh2.onmousedown=function(event){
+		var event=event||window.event;
+		bdrag=true;
+		disX=event.clientX-obox.offsetLeft;
+		disY=event.clientY-obox.offsetTop;
+		console.log(obox.offsetLeft)
+		console.log(event.clientX)
+		apos.push({x:obox.offsetLeft,y:obox.offsetTop})
+		this.setCapture&&this.setCapture()
+	}
+	//拖拽开始
+	document.onmousemove=function(event){
+		if(!bdrag)return;
+		var event=event||window.event;
+		var il=event.clientX-disX;	
+		var it=event.clientY-disY;
+		var maxl=document.documentElement.clientWidth-obox.offsetWidth;
+		var maxt=document.documentElement.clientHeight-obox.offsetHeight;
+		il=il<0?0:il;
+		il=il>maxl?maxl:il;
+		it=it<0?0:it;
+		it=it>maxt?maxt:it;
+		obox.style.marginTop=obox.style.marginLeft=0;
+		obox.style.left=il+"px";
+		obox.style.top=it+"px";
+		apos.push({x:il,y:it})
+		status();
+		return false;
+	}
+	//t拖拽结束
+	document.onmouseup=window.onblur=oh2.onlosecapture=function(){
+		bdrag=false;
+		oh2.releaseCapture&&oh2.releaseCapture();
+		status();
+	}
+	//回放按钮
+	oa.onclick=function(){
+		if(apos.length==1)return;
+		var timer=setInterval(function(){
+			var opos=apos.pop();
+			opos?(obox.style.left=opos.x+"px",obox.style.top=opos.y+"px",status()):clearInterval(timer)
+		},10)
+		this.focus=false;
+		return false
+	};
+	//监听事件状态
+	function status(){
+		ospan[0].innerHTML=bdrag;
+		ospan[1].innerHTML=obox.offsetTop;
+		ospan[2].innerHTML=obox.offsetLeft;
+	}
+	status()
+}
+</script>
+</body>
+</html>

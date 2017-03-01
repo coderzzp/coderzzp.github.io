@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>控制div属性</title>
+<style>
+*{margin:0;padding:0;}
+.wrapper{margin:0 auto;width:500px;text-align: center}
+.btn-chose{height:20px;width:42px;}
+#box{background-color:#000000;height:100px;width:100px;margin:10px auto;}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+    	<input type="button" value="变宽" class="btn-chose">
+        <input type="button" value="变高" class="btn-chose">
+        <input type="button" value="变色" class="btn-chose">
+        <input type="button" value="隐藏" class="btn-chose">
+        <input type="button" value="重置" class="btn-chose">
+        <div id="box"></div>
+</div>
+<script language="javascript">
+	var changecolor=function(elem,attr,value){
+		elem.style[attr]=value;
+	}
+	window.onload=function (){
+		var obtn=document.getElementsByTagName("input");
+		var odiv=document.getElementById("box");
+		var oatt=["width","height","background","display","display"];
+		var oval=["200px","200px","red","none","block"];
+		for(var i=0;i<obtn.length;i++){
+			obtn[i].index=i;
+			obtn[i].onclick=function(){
+				this.index==obtn.length-1&&(odiv.style.cssText="");
+				changecolor(odiv,oatt[this.index],oval[this.index]);
+			}
+		}
+	}
+</script>
+</body>
+
+</html>
+<!--群体操控事件，for循环遍历每一个元素并为其增加onclick-->

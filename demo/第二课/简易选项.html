@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>简易选项卡</title>
+<style>
+*{font-size:12px;}
+#outer{width:450px;margin:0 auto;}
+#tab{overflow:hidden;width:448px;background:#000000;border:1px solid #000000;border-bottom-width:0}/*注意这里修改单独border的指令*/
+#tab li{float:left;list-style:none;background:#000000;padding:10px 15px;color:#FFFFFF;cursor:pointer;}
+#content{border:1px solid #000000}
+#content li{line-height:25px}
+#tab li.current{background:#ccc;color:#000}
+</style>
+</head>
+
+<body>
+<div id="outer">
+	<div id="tab">
+    	<li class="current">第一课</li>
+        <li class>第二课</li>
+        <li class>第三课</li>
+    </div>
+	<div id="content">
+    	<ul style="display:block">
+        	<li>网页特效原理分析</li>
+            <li>响应用户操作</li>
+            <li>提示框效果</li>
+            <li>事件驱动</li>
+            <li>元素属性操作</li>
+            <li>动手编写第一个JS特效</li>
+            <li>引入函数</li>
+        </ul>
+        <ul style="display:none">
+        	<li>JavaScript组成：ECMAScript、DOM、BOM，JavaScript兼容性来源</li>
+            <li>JavaScript出现的位置、优缺点</li>
+        </ul>
+        <ul style="display:none">
+        	<li>改变网页背景颜色</li>
+            <li>函数传参</li>
+            <li>高重用性函数的编写</li>
+            <li>126邮箱全选效果</li>
+            <li>循环及遍历操作</li>
+        </ul>
+        
+    </div>
+</div>
+<script>
+window.onload=function(){
+	var oli=document.getElementById("tab").getElementsByTagName("li")
+	var oul=document.getElementById("content").getElementsByTagName("ul")
+	for(var i=0;i<oli.length;i++){
+		//这里定义index便于后面this连接两个
+		oli[i].index=i;
+		//注意这里用的onmouseover事件,不要和JQ的mouseover混淆;
+		oli[i].onmouseover=function(){
+			for(var n = 0; n < oli.length; n++)oli[n].className="";
+			this.className="current";
+			for(var n = 0; n < oul.length; n++)oul[n].style.display="none";
+			oul[this.index].style.display="block";
+        }	
+	}
+}
+</script>
+</body>
+</html>
+<!--主要是this的运用，联系两个事件

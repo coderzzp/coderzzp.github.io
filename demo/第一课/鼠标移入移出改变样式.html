@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>鼠标移入/移出改变样式</title>
+<style>
+body{font-size:12px;color:#FFFFFF}
+#div1{width:150px;height:150px;margin:0 auto;padding:10px;border:10px solid #000000;cursor:crosshair;background:black;}
+#div1:hover{color:red;background:#f0f0f0;border:10px solid red;}
+</style>
+</head>
+
+<body>
+<div id="div1" class>鼠标移入样式改变，鼠标移出恢复</div>
+</body>
+</html>
+<!--这道题还可以用JS的放方法#div1:hover改成#div1.hover.然后通过onmouse事件为#div1增加class属性

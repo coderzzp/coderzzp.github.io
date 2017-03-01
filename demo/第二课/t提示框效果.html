@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>提示框效果</title>
+<style>
+*{margin:0 auto;padding:0;font-size:12px;color:#333}
+#outer{width:560px;border:1px solid #333;padding:0 0 10px 10px;}
+#nav:after{content:".";display:block;height:0;clear:both;visibility:hidden;}
+#nav li{list-style:none;width:100px;height:100px;border:1px solid #333;float:left;margin:10px 10px 0 0;background:#D8D6D6;position:relative}
+strong{display:block;margin-bottom:10px;}
+a{width:80px;height:80px;padding:10px;display:block;text-decoration:none;}/*任何盒子模型的属性都要基于对象是block的*/
+h2{text-align:center;font-size:20px;padding:15px}
+.zindex{z-index:1}
+img{position:absolute;top:-14px;left:-14px;border:1px solid #333333;}
+</style>
+</head>
+
+<body>
+<div id="outer">
+	<h2>名车车标展示，鼠标移过显示车标</h2>
+    <ul id="nav">
+    	<li class>
+        	<a href="javascript:;" tltle="BMW宝马汽车">
+            	<strong>BMW</strong>宝马汽车
+            </a>
+            <img src="images/1.jpg" alt="BMW 宝马汽车" style="display:none;">
+        </li> 
+        <li class>
+        	<a href="javascript:;" tltle="Alfa Romeo 阿尔法-罗米欧">
+            	<strong>Alfa Romeo</strong>阿尔法-罗米欧
+            </a>
+            <img src="images/2.jpg" alt=" 阿尔法-罗米欧" style="display:none;">
+        </li> 
+        <li class>
+        	<a href="javascript:;" tltle="Skoda 斯柯达">
+            	<strong>Skoda</strong> 斯柯达
+            </a>
+            <img src="images/3.jpg" alt="斯柯达" style="display:none;">
+        </li> 
+        <li class>
+        	<a href="javascript:;" tltle="Volkswagen 大众汽车">
+            	<strong>Volkswagen</strong> 大众汽车
+            </a>
+            <img src="images/4.jpg" alt="大众汽车" style="display:none;">
+        </li> 
+        <li class>
+        	<a href="javascript:;" tltle="BMW宝马汽车">
+            	<strong>BMW</strong>宝马汽车
+            </a>
+            <img src="images/5.jpg" alt="BMW 宝马汽车" style="display:none;">
+        </li> 
+        <li class>
+        	<a href="javascript:;" tltle="Saab 萨布牌轿">
+            	<strong>Saab</strong> 萨布牌轿车
+            </a>
+            <img src="images/6.jpg" alt=" 萨布牌轿车" style="display:none;">
+        </li> 
+        <li class>
+        	<a href="javascript:;" tltle="Lamborghini 兰博基尼">
+            	<strong>Lamborghini</strong> 兰博基尼
+            </a>
+            <img src="images/7.jpg" alt=" 兰博基尼" style="display:none;">
+        </li> 
+        <li class>
+        	<a href="javascript:;" tltle="Porsche 保时捷">
+            	<strong>Porsche</strong> 保时捷
+            </a>
+            <img src="images/8.jpg" alt="Porsche 保时捷" style="display:none;">
+        </li> 
+        <li class>
+        	<a href="javascript:;" tltle="Mercedes1 梅赛德斯 奔驰">
+            	<strong>Mercedes1</strong> 梅赛德斯 奔驰
+            </a>
+            <img src="images/9.jpg" alt="Mercedes1 梅赛德斯 奔驰" style="display:none;">
+        </li> 
+        <li class>
+        	<a href="javascript:;" tltle="Buick 别克汽车">
+            	<strong>Buick</strong>  别克汽车
+            </a>
+            <img src="images/10.jpg" alt="Buick 别克汽车驰" style="display:none;">
+        </li> 
+        
+    </ul>
+</div>
+<script>
+window.onload=function(){
+	var oli=document.getElementsByTagName("li");
+	var oa=document.getElementsByTagName("a")
+	var oimg=document.getElementsByTagName("img")
+	for(i=0;i<oli.length;i++){
+		oli[i].index=oa[i].index=oimg[i].index=i;
+		oa[i].onmouseover=function(){
+			oli[this.index].className="zindex"
+			oimg[this.index].style.display="block"
+		}
+		oimg[i].onmouseout=function(){
+			oli[this.index].className=""
+			oimg[this.index].style.display="none"
+		}
+	}
+}
+	
+</script>
+
+</body>
+</html>
+<!--大问题不多，主要是1.img的position定位
+·					2.利用z-index使浮动图片靠前
+					3.这里用到了after伪类清楚浮动的方法，原因是这里有positon定位，故不能用overflow:hidden.
+                    这里用到:
+                    clearfloat:after{display:block;clear:both;content:"";visibility:hidden;height:0} 

@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>求和</title>
+</head>
+<style>
+*{padding:0;margin:0;font-size:12px;}
+.outer{width:500px;margin:10px auto;}
+.outer input{width:220px;padding:3px;margin-right:5px}
+p{margin-top:10px;}
+strong{margin-top:20px;font-size:30px;color:red;}
+</style>
+<body>
+<div class="outer">
+	<label><input type="text" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"><span>求和，数字之间用半角逗号隔开</span></label>
+    <p><button>求和</button></p>
+    <strong class="sum"></strong>
+
+</div>
+<script>
+window.onload=function(){
+var oBtn=document.getElementsByTagName("button")[0];
+var oStrong=document.getElementsByTagName("strong")[0]
+	oBtn.onclick = function ()
+		{
+			var sum = 0;
+			var oInput = document.getElementsByTagName("input")[0].value.split(",");
+			for (var i in oInput)
+			{
+				sum += parseInt(oInput[i])
+			}
+			oStrong.innerHTML = sum
+		}
+}
+</script>
+</body>
+</html>

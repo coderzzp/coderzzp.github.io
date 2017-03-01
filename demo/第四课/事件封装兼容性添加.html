@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style>
+pre{color:green;border:1px dotted #333333;padding:10px 15px;background:#f0f0f0}
+</style>
+</head>
+
+<body>
+<!--如果您希望使用 <pre> 标签来定义计算机源代码，比如 HTML 源代码，请使用符号实体来表示特殊字符，比如 "&lt;" 代表 "<"，"&gt;" 代表 ">"，"&amp;" 代表 "&"。-->
+<pre>
+&lt;script type="text/javascript"&gt;
+var EventUtil = {
+	addHandler: function (oElement, sEvent, fnHandler) {
+		oElement.addEventListener ? oElement.addEventListener(sEvent, fnHandler, false) : oElement.attachEvent("on" + sEvent, fnHandler)	
+	},
+	removeHandler: function (oElement, sEvent, fnHandler) {
+		oElement.removeEventListener ? oElement.removeEventListener(sEvent, fnHandler, false) : oElement.detachEvent("on" + sEvent, fnHandler)
+	},
+	addLoadHandler: function (fnHandler) {
+		this.addHandler(window, "load", fnHandler)
+	}
+}
+&lt;/script&gt;
+</pre>
+<center>
+	<input type="button" value="毫无用处的按钮"/>
+    <input type="button" value="绑定click"/>
+    <input type="button" value="解除绑定"/>
+</center>
+<script>
+var EventUtil = {
+	addHandler: function (oElement, sEvent, fnHandler) {
+		oElement.addEventListener ? oElement.addEventListener(sEvent, fnHandler, false) : oElement.attachEvent("on" + sEvent, fnHandler)	
+	},
+	removeHandler: function (oElement, sEvent, fnHandler) {
+		oElement.removeEventListener ? oElement.removeEventListener(sEvent, fnHandler, false) : oElement.detachEvent("on" + sEvent, fnHandler)
+	},
+	//事件封装函数
+	addLoadHandler: function (fnHandler) {
+		this.addHandler(window, "load", fnHandler)
+	}
+}
+//注意事件名称加双引号才能使用
+EventUtil.addLoadHandler(function(){
+	var obtn=document.getElementsByTagName("input");
+	EventUtil.addHandler(obtn[1],"click",function(){
+		EventUtil.addHandler(obtn[0],"click",fnHandler)
+		obtn[0].value="我可以点击了"
+	});
+	EventUtil.addHandler(obtn[2],"click",function(){
+		EventUtil.removeHandler(obtn[0],"click",fnHandler)
+		obtn[0].value="毫无用处的按钮"
+	});
+	function fnHandler (){
+		alert("事件绑定成功！")	
+	}	
+})
+//介绍了通过在对象中封装函数的方法，并且使用了DOM2中的添加事件的方法
+</script>
+</body>
+</html>

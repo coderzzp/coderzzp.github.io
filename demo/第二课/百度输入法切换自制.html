@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style>
+*{font-size:12px;padding:0;margin:0}
+li{list-style:none}
+button{margin:10px 0;cursor:pointer;}
+a{text-decoration:none;}
+#outer{margin:0 auto;width:70px;}
+#ime{border:1px solid #9a99ff;}
+#ime>li{padding-left:5px;line-height:24px}
+#last{border-top:1px solid #9a99ff}
+li:hover{background-color:#78D1EC}
+</style>
+</head>
+
+<body>
+<div id="outer">
+	<button>输入法</button>
+    <ul id="ime" style="display:none;">
+    	<li><a href="javascript:;">英文</a></li>
+        <li><a href="javascript:;">拼音</a></li>
+        <li id="last"><a href="javascript:;">关闭</a></li>
+    </ul>
+</div>
+</body>
+<script>
+window.onload=function(){
+	var obtn=document.getElementsByTagName("button")[0];
+	var olast=document.getElementById("last");
+	var oime=document.getElementById("ime");
+	var style=oime.style;
+	obtn.onclick=function(){
+		<!--这里用到了三元表达式，还设涉及了一点运算符优先级问题-->
+		style.display=style.display=="block"?"none":"block"
+	}
+	olast.onclick=function (){
+		style.display="none";
+	}
+}
+</script>
+</html>
+<!--三元运算符:
+
+如名字表示的三元运算符需要三个操作数。
+
+语法是 条件 ? 结果1 : 结果2;. 这里你把条件写在问号(?)的前面后面跟着用冒号(:)分隔的结果1和结果2。满足条件时结果1否则结果2。

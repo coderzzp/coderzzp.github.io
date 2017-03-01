@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>用for循环改变三个DIV的背景</title>
+<style>
+#nav{text-align:center;}
+#box{margin:10px auto;width:330px;height:100px;}
+#box>div{width:100px;height:100px;background-color:red;float:left;margin:0 5px;background-color:black;}
+</style>
+</head>
+
+<body>
+<div id="nav">
+	<input type="button" value="点击将div变成红色"/>
+</div>
+<div id="box">
+	<div></div>
+    <div></div>
+    <div></div>
+</div>
+</body>
+<script>
+window.onload=function(){
+	var odiv=document.getElementById("box").getElementsByTagName("div")
+	var onav=document.getElementsByTagName("input")[0]
+	onav.onclick=function(){
+		for(i=0;i<odiv.length;i++)odiv[i].style.background="red"
+	}
+}
+</script>
+</html>
+<!--1。任何css样式写margin：0 auto必须要有宽度
+    2.注意getelements的那几个

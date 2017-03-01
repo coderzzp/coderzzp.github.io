@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>记住密码提示框</title>
+<style>
+*{font-size:12px;}
+#outer{width:200px;margin:0 auto;}
+input{margin-right:5px;vertical-align:middle}
+#tips{background:#FFEFA7;border:#FF9900;margin-top:5px;padding:5px;display:none;}
+</style>
+</head>
+
+<body>
+<div id="outer">
+	<label><input type="checkbox"/>两周内自动登陆</label>
+    <div id="tips">为了您的信息安全，请不要在网吧或公用电脑上使用此功能！</div>
+</div>
+</body>
+<script>
+	var olabel=document.getElementsByTagName("label")[0]
+	var otips=document.getElementById("tips")
+	olabel.onmousemove=function(){
+		otips.style.display="block"
+	}
+	olabel.onmouseout=function(){
+		otips.style.display="none"
+	}
+</script>
+</html>
+<!--注意input是不要成对出现的元素;
+    input是内联元素，通过vertical-align可以控制它在行内的位置;

@@ -1,0 +1,197 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>自动轮播（面对对象法）</title>
+<style>
+body,ul,div,li{margin:0;padding:0;}
+ul{list-style-type:none;}
+body{background:#000;text-align:center;font:12px/20px Arial;}/*这里注意text-align的继承性*/
+#box{position:relative;width:492px;height:172px;background:#fff;border-radius:5px;border:8px solid #fff;margin:10px auto;cursor:pointer;}
+#box .list{position:relative;width:490px;height:170px;overflow:hidden;}
+#box .list ul{position:absolute;top:0;left:0;}
+#box .list li{width:490px;height:170px;overflow:hidden}
+#box .count{position:absolute;right:0;bottom:5px;}
+#box .count li{color:#FFFFFF;float:left;width:20px;height:20px;cursor:pointer;margin-right:5px;overflow:hidden;background:#f90;opacity:0.7;border-radius:20px;}
+#box .count li.current{color:#fff;opacity:1;background:#f60;}
+
+</style>
+</head>
+<body>
+<div id="box">
+	<div class="list">
+    	<ul>
+        	<li>
+            	<img src="img/01.jpg">
+            </li>
+            <li>
+            	<img src="img/02.jpg">
+            </li>
+            <li>
+            	<img src="img/03.jpg">
+            </li>
+            <li>
+            	<img src="img/04.jpg">
+            </li>
+            <li>
+            	<img src="img/05.jpg">
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+//获取ID
+var $=function(id){return typeof id==="string"?document.getElementById(id):id}
+//获取tagName
+var $$=function(tagName,oParent){return(oParent||document).getElementsByTagName(tagName)}
+//开始构建一个自动播放对象
+var AutoPlay=function(id){this.initialize(id)};
+//开始为对象的原型增加属性
+AutoPlay.prototype={
+	initialize:function(id){
+		var oThis=this;
+   		this.oBox=$(id);
+ 		this.oUl=$$("ul",this.oBox)[0]
+ 		this.aImg=$$("img",this.oBox);
+ 		this.iNow=0;
+ 		this.createBtn()//创建数字节点并添加到box里
+ 		this.aBtn=$$("li",this.oCount);
+ 		this.toggle();
+ 		this.autoTimer=setInterval(function(){
+ 			oThis.next()
+ 		},3000)
+ 		this.oBox.onmouseover=function(){
+ 			clearInterval(oThis.autoTimer)
+ 		}
+ 		this.oBox.onmouseout=function(){
+ 			oThis.autoTimer=setInterval(function(){
+ 				oThis.next()
+ 			},3000)
+ 		}
+ 		for(var i=0;i<this.aBtn.length;i++){
+ 			this.aBtn[i].index=i;
+ 			this.aBtn[i].onmouseover=function(){
+ 				oThis.iNow=this.index;
+ 				oThis.toggle();
+ 			}
+ 		}
+	},
+	createBtn:function(){
+		this.oCount=document.createElement("ul");
+		this.oCount.className="count"
+		this.oFrag=document.createDocumentFragment();
+		for(var i=0;i<this.aImg.length;i++){
+			var oLi=document.createElement("li");
+			oLi.innerHTML=i+1;
+			this.oFrag.appendChild(oLi);	
+		}
+		this.oCount.appendChild(this.oFrag);
+		this.oBox.appendChild(this.oCount)
+	},
+	//显示iNow对应的obtn并且用domove函数将其移动到指定位置
+	toggle:function(){
+		for(var i=0;i<this.aBtn.length;i++){
+			this.aBtn[i].className="";
+			this.aBtn[this.iNow].className="current";
+			this.doMove(-(this.iNow*this.aImg[0].offsetHeight))
+		}
+	},
+	//增加Inow的值并且用toggle函数将iNow这个数字对应的obtn显示出来
+	next:function(){
+		this.iNow++;
+		this.iNow==this.aBtn.length&&(this.iNow=0);
+		this.toggle();
+	},
+	doMove:function(iTarget){
+		var oThis=this;
+		clearInterval(oThis.timer)
+		//下面这个timer是定义在外层定义域上的
+		oThis.timer=setInterval(function(){
+			var iSpeed=(iTarget-oThis.oUl.offsetTop)/5;
+			iSpeed=iSpeed>0?Math.ceil(iSpeed):Math.floor(iSpeed);
+			console.log(iSpeed)
+			console.log(oThis.oUl.offsetTop)
+			oThis.oUl.offsetTop==iTarget?clearInterval(oThis.timer):(oThis.oUl.style.top=oThis.oUl.offsetTop+iSpeed+"px")
+		},30)
+	}
+}
+window.onload=function(){
+	new AutoPlay("box")
+}
+// 获取ID
+// var $=function(id){return typeof id==="string"?document.getElementById(id):id}
+// //获取tagName
+// var $$=function(tagName,oParent){return(oParent||document).getElementsByTagName(tagName)};
+// //自动播放对象
+// var AutoPlay=function(id){this.initialize(id)};
+// //开始为对象源性对象增加属性
+// AutoPlay.prototype={
+// 	initialize:function(id){
+// 		var oThis=this;
+// 		this.oBox=$(id);
+// 		this.oUl=$$("ul",this.oBox)[0]
+// 		this.aImg=$$("img",this.oBox);
+// 		this.iNow=0;
+// 		this.createBtn();//创建数字dom节点并且添加到box里
+// 		this.aBtn=$$("li",this.oCount);
+// 		this.toggle();//切换当前数字并且显示当前数字对应的图片,这里iNOw=0
+// 		this.autoTimer=setInterval(function(){
+// 			oThis.next()	
+// 		},3000)
+// 		this.oBox.onmouseover=function(){
+// 			clearInterval(oThis.autoTimer)	
+// 		}
+// 		this.oBox.onmouseout=function(){
+// 			oThis.autoTimer=setInterval(function(){
+// 				oThis.next()
+// 			},3000)
+// 		}
+// 		for(var i=0;i<this.aBtn.length;i++){
+// 			this.aBtn[i].index=i;
+// 			this.aBtn[i].onmouseover=function(){
+// 				oThis.iNow=this.index;
+// 				oThis.toggle();	
+// 			}	
+// 		}
+// 	},
+// 	//创建于img个数相同的数字dom结点并且加入到OBOX中去
+// 	createBtn:function(){
+// 		this.oCount=document.createElement("ul");
+// 		this.oCount.className="count"
+// 		this.oFrag=document.createDocumentFragment();
+// 		for(var i=0;i<this.aImg.length;i++){
+// 			var oLi=document.createElement("li");
+// 			oLi.innerHTML=i+1;
+// 			this.oFrag.appendChild(oLi);	
+// 		}
+// 		this.oCount.appendChild(this.oFrag);
+// 		this.oBox.appendChild(this.oCount)
+// 	},
+// 	//根据this.INOW的值切换current所在的Dom结点，并且用移动方法切换图片位置
+// 	toggle:function(){
+// 		for(var i=0;i<this.aBtn.length;i++)this.aBtn[i].className="";
+// 		this.aBtn[this.iNow].className="current";
+// 		this.doMove(-(this.iNow*this.aImg[0].offsetHeight))
+// 	},
+// 	next:function(){
+// 		this.iNow++;
+// 		this.iNow==this.aBtn.length&&(this.iNow=0)
+// 		this.toggle();	
+// 	},
+// 	doMove:function(iTarget){
+// 		var oThis=this;
+// 		clearInterval(oThis.timer)
+// 		oThis.timer=setInterval(function(){
+// 			var iSpeed=(iTarget-oThis.oUl.offsetTop)/5;
+// 			oThis.oUl.offsetTop==iTarget?clearInterval(oThis.timer):(oThis.oUl.style.top=oThis.oUl.offsetTop+iSpeed+"px")	
+// 		},30)
+// 	}
+// };
+// window.onload=function(){
+// 	new AutoPlay("box")	
+// }
+// 第一用到面对对象的方法，用到了原型模式，感觉开启了新世界大大门。这一段是JS的核心方法。
+</script>
+</body>
+</html>
