@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+    <link type="text/css" rel="stylesheet" href="https://apps.bdimg.com/libs/bootstrap-glyphicons/1.0/css/bootstrap-glyphicons.css">
+    <style type="text/css">
+        html,body{height:100%;}
+        body,div{margin: 0;padding: 0;font-family: -apple-system, "SF UI Text", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;}
+        .wraper{overflow: hidden;height:100%;width: 100%}
+        .left,.right{width: 50%;height:100%;float: left;}
+        /*这里用到了ie盒子模型*/
+        .left{background-color: #fff;border-right: 1px solid #d9d9d9;box-sizing:border-box}
+        .right{background-color: #fcfaf2}
+        .left .title{width:90%;margin: 20px 20px;text-overflow: ellipsis;font-size: 30px;white-space: nowrap;border:none;line-height: 30px;outline:none}
+        .left .nav{height: 38px;width: 100%;background-color: #dedede;}
+        .left .nav .glyphicon{line-height: 40px;padding: 12px;font-size: 14px;color: #555555}
+        .left .nav .nav_right{float: right;}
+        .left #input{margin: 20px;border: none;width:90%;outline:none;font-family: inherit;font-size: 16px;line-height: 30px;}
+        .right #outer{width: 100%}
+        .right #outer .h0{font-size:40px;margin-left: 20px;}
+        
+    </style>
+</head>
+<body>
+<div class="wraper">
+    <div class='left'>
+        <input class="title" type="text">
+        <div class="nav">
+            <span class="glyphicon glyphicon-picture"></span>
+            <span class="glyphicon glyphicon-arrow-left"></span>
+            <span class="glyphicon glyphicon-repeat"></span>
+            <span class="glyphicon glyphicon-time"></span>
+            <div class="nav_right">
+                <span class="glyphicon glyphicon-floppy-save"></span>
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                <span class="glyphicon glyphicon-resize-full"></span>
+                <span class="glyphicon glyphicon-ok ">发布文章</span>
+            </div>
+        </div>
+        <div id="input" contenteditable="true"></div>
+    </div>
+    <div class="right">
+        <p id="outer"></p>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/2.1.1/jquery.js"></script>
+<script type="text/javascript" src="https://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+var otitle=document.getElementsByClassName("title")[0]
+var input=document.getElementById("input")
+var outer=document.getElementById("outer")
+var n=0
+otitle.onkeyup=function(){
+    //单例模式
+    var h0=outer.getElementsByClassName("h0")[0]||document.createElement("div")
+    h0.className='h0'
+    h0.innerText=this.value
+    console.log(outer.hasChildNodes())
+    if(outer.hasChildNodes()){
+        outer.insertBefore(h0, outer.firstChild)
+    }
+    else {
+        outer.appendChild(h0)
+    }
+    
+}
+input.onkeyup=function(ev){
+    //定义#的匹配原则
+    var regTitle=new RegExp('^#{1,6}')
+    //获得数据
+    var data=this.innerText
+    //#的长度
+    var length;
+    var outer_line=outer.getElementsByClassName("outer_line")[0]||document.createElement("p")
+    outer_line.className="outer_line";
+    //处理数据(如果开头是#)
+    if(regTitle.test(data)){
+        var regTitle_num=new RegExp('#',"g")
+        var result=[]
+        var match=regTitle_num.exec(data)
+        while(match!=null){
+            result.push(match)
+            match=regTitle_num.exec(data)
+        }
+        //返回#的长度
+        length=result.length>=6?6:result.length
+        console.log(length)
+        data=data.replace(regTitle,"")
+        data="<h"+length+">"+data+"<h"+length+"/>"
+    }
+    outer_line.innerHTML=data;
+    outer.appendChild(outer_line)
+}
+var str = "Visit W3School W3School"; 
+var patt = new RegExp("W","g");
+var result=[]
+var match=patt.exec(str)
+while(match != null){
+    result.push(match);
+    match=patt.exec(str);
+}
+console.log(result)
+// +(ev.keyCode==13?"<br>":"");
+</script>
+</html>
