@@ -16,10 +16,23 @@
         .left .nav{height: 38px;width: 100%;background-color: #dedede;}
         .left .nav .glyphicon{line-height: 40px;padding: 12px;font-size: 14px;color: #555555}
         .left .nav .nav_right{float: right;}
-        .left #input{margin: 20px;border: none;width:90%;outline:none;font-family: inherit;font-size: 16px;line-height: 30px;}
+        .left #input {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            vertical-align: top;
+            box-sizing: border-box;
+            padding: 0 20px;
+            border: none;
+            resize: none;
+            outline: none;
+            font-size: 14px;
+            font-family: consolata, Courier, monospace;
+            padding: 20px;
+        }
         .right #outer{width: 100%}
-        .right #outer .h0{font-size:40px;margin-left: 20px;}
-        
+        .right .h0{font-size:40px;margin-left: 20px;}
+
     </style>
 </head>
 <body>
@@ -38,10 +51,10 @@
                 <span class="glyphicon glyphicon-ok ">发布文章</span>
             </div>
         </div>
-        <div id="input" contenteditable="true"></div>
+        <textarea id="input"></textarea>
     </div>
     <div class="right">
-        <p id="outer"></p>
+        <div id="outer"></p>
     </div>
 </div>
 </body>
@@ -49,59 +62,140 @@
 <script type="text/javascript" src="https://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 var otitle=document.getElementsByClassName("title")[0]
-var input=document.getElementById("input")
+var oinput=document.getElementById("input")
 var outer=document.getElementById("outer")
+var oright=document.getElementsByClassName("right")[0]
 var n=0
 otitle.onkeyup=function(){
     //单例模式
-    var h0=outer.getElementsByClassName("h0")[0]||document.createElement("div")
+    var h0=oright.getElementsByClassName("h0")[0]||document.createElement("div")
     h0.className='h0'
     h0.innerText=this.value
-    console.log(outer.hasChildNodes())
-    if(outer.hasChildNodes()){
-        outer.insertBefore(h0, outer.firstChild)
-    }
-    else {
-        outer.appendChild(h0)
-    }
+    // if(outer.hasChildNodes()){
+    //     oright.insertBefore(h0, outer.firstChild)
+    // }
+    // else {
+    //     oright.appendChild(h0)
+    // }
+    oright.insertBefore(h0,outer)
     
 }
-input.onkeyup=function(ev){
-    //定义#的匹配原则
-    var regTitle=new RegExp('^#{1,6}')
-    //获得数据
-    var data=this.innerText
-    //#的长度
-    var length;
-    var outer_line=outer.getElementsByClassName("outer_line")[0]||document.createElement("p")
-    outer_line.className="outer_line";
-    //处理数据(如果开头是#)
-    if(regTitle.test(data)){
-        var regTitle_num=new RegExp('#',"g")
-        var result=[]
-        var match=regTitle_num.exec(data)
-        while(match!=null){
-            result.push(match)
-            match=regTitle_num.exec(data)
+
+
+function updata(){
+    outer.innerHTML=mark(this.value)
+}
+function mark(source){
+    //将输入内容用回车号分成数组
+    var inputArr = source.split('\n');
+    //判定内容，并且将内容封装到一个数组对象中[{第一行的内容，第一行的类型},{第二行的内容，第二行的类型}]
+    var  jsonInput=json(inputArr)
+    //解开数组对象使其成为innerHTML可用的数据
+    console.log(inLine(jsonInput))
+    return inLine(jsonInput)
+    
+}
+function json(input_arr){
+    //存放内容以及名称
+    var result=[]
+    //存放上一行的对象(用于hearder)
+    var last
+    var blockPatterns=[
+        //注意这里的判断顺序（）
+        { pattern: /^#\s+(.*)/, name: 'h1' },
+        { pattern: /^#{2}\s+(.*)/, name: 'h2' },
+        { pattern: /^#{3}\s+(.*)/, name: 'h3' },
+        { pattern: /^#{4}\s+(.*)/, name: 'h4' },
+        { pattern: /^#{5}\s+(.*)/, name: 'h5' },
+        { pattern: /^#{5}\s+(.*)/, name: 'h6' },
+        { pattern: /^[-*]\s+(.*)/, name: 'ul' },
+        { pattern: /^[0-9]+\.+(.*)/, name: 'ol' },
+        { pattern: /^={6,}/, name: 'header'},//上一行是主标题
+        { pattern: /^-{6,}/, name: 'subheader'},//上一行是副标题
+        { pattern: /^\*{3,}/, name: 'hr'},
+        { pattern: /(.+)/, name: 'para' },
+    ]
+    for(var i in input_arr){
+        for(var obj of blockPatterns){
+           if(obj.pattern.test(input_arr[i])){
+                if(result.length>0){
+                    last=result[result.length-1]
+                }else{
+                    last=null
+                }
+                switch(obj.name){
+                    case 'h1': case 'h2': case 'h3': case 'h4': case 'h5': case 'h6':
+                        result.push({content:RegExp.$1,type:obj.name})
+                        //注意break只能退出一层循环
+                        break;
+                    case 'para':
+                        if(!last){
+                            result.push({content:RegExp.$1,type:'p'})
+                            break
+                        }
+                        if (last.type === 'p') {
+                            last.content += (' ' + RegExp.$1);
+                            break;
+                        }else{
+                            result.push({content:RegExp.$1,type:'p'})
+                            break 
+                        }
+                        
+                    case 'header':
+                        if(last){
+                            last.type='h1'
+                        }
+                        break;
+                    case 'subheader':
+                        if(last){
+                            last.type='h2'
+                        }
+                        break;
+                    case 'ul':case 'ol':
+                        if(last){
+                            if(obj.name==last.type){
+                                last.content.push(RegExp.$1)
+                            }else{
+                                result.push({
+                                    content:[RegExp.$1],
+                                    type:obj.name
+                                })
+                            }
+                        }else{
+                            result.push({
+                                content:[RegExp.$1],
+                                type:obj.name
+                            })
+                        }
+                        break;
+                    case 'hr':
+                        result.push({content:' ',type:obj.name})
+                        break;
+                }
+                //一旦test到，就不再test，进行下一行的for循环
+                break
+           }
         }
-        //返回#的长度
-        length=result.length>=6?6:result.length
-        console.log(length)
-        data=data.replace(regTitle,"")
-        data="<h"+length+">"+data+"<h"+length+"/>"
     }
-    outer_line.innerHTML=data;
-    outer.appendChild(outer_line)
+    return result
 }
-var str = "Visit W3School W3School"; 
-var patt = new RegExp("W","g");
-var result=[]
-var match=patt.exec(str)
-while(match != null){
-    result.push(match);
-    match=patt.exec(str);
+function inLine(json_Input){
+    var result=[]
+    for(var obj of json_Input){
+        if(obj.type==='ul'||obj.type==='ol'){
+            var content='<'+obj.type+'>'
+            for(var oli of obj.content){
+                content+='<li>'+oli+'</li>'
+            }
+            content+='</'+obj.type+'>'
+            result.push(content)
+            continue;
+        }
+        result.push('<'+obj.type+'>'+obj.content+'</'+obj.type+'>')
+    }
+    return result.join("")
 }
-console.log(result)
-// +(ev.keyCode==13?"<br>":"");
+//执行监听
+oinput.addEventListener('input',updata)
 </script>
 </html>
