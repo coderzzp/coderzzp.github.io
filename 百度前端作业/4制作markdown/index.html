@@ -16,10 +16,10 @@
         .left .nav{height: 38px;width: 100%;background-color: #dedede;}
         .left .nav .glyphicon{line-height: 40px;padding: 12px;font-size: 14px;color: #555555}
         .left .nav .nav_right{float: right;}
-        .left #input {
+        /*.left #input {
             display: inline-block;
             width: 100%;
-            height: 100%;
+
             vertical-align: top;
             box-sizing: border-box;
             padding: 0 20px;
@@ -29,10 +29,29 @@
             font-size: 14px;
             font-family: consolata, Courier, monospace;
             padding: 20px;
+        }*/
+        .left .expandingArea{
+             position:relative;
+             width: 500px;
         }
-        .right #outer{width: 100%}
+        .left .pre{
+            width: 500px;
+            word-wrap:break-word;
+            visibility: hidden;
+        }
+        .left textarea{
+            border: none;
+            resize: none;
+            outline: none;
+            position:absolute;
+            top:0;
+            left:0;
+            width: 100%;
+            height:100%;
+        }
+        .right #outer{width: 99%;height:100%;word-wrap:break-word;margin: 10px 20px; overflow:scroll}
         .right .h0{font-size:40px;margin-left: 20px;}
-
+        
     </style>
 </head>
 <body>
@@ -51,21 +70,26 @@
                 <span class="glyphicon glyphicon-ok ">发布文章</span>
             </div>
         </div>
-        <textarea id="input"></textarea>
+        <div class="expandingArea ">
+            <div class="pre"><span></span><br></div>
+            <textarea id="input"></textarea>
+        </div>
     </div>
     <div class="right">
-        <div id="outer"></p>
+        <div id="outer"></div>
     </div>
 </div>
 </body>
 <script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/2.1.1/jquery.js"></script>
 <script type="text/javascript" src="https://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+var oexpandingArea=document.getElementsByClassName("expandingArea")[0]
 var otitle=document.getElementsByClassName("title")[0]
 var oinput=document.getElementById("input")
 var outer=document.getElementById("outer")
 var oright=document.getElementsByClassName("right")[0]
-var n=0
+var opre=document.getElementsByTagName('pre')[0]
+var ospan=oexpandingArea.getElementsByTagName("span")[0]
 otitle.onkeyup=function(){
     //单例模式
     var h0=oright.getElementsByClassName("h0")[0]||document.createElement("div")
@@ -83,6 +107,8 @@ otitle.onkeyup=function(){
 
 
 function updata(){
+    console.log(this.value)
+    ospan.innerText=this.value
     outer.innerHTML=mark(this.value)
 }
 function mark(source){
@@ -91,7 +117,6 @@ function mark(source){
     //判定内容，并且将内容封装到一个数组对象中[{第一行的内容，第一行的类型},{第二行的内容，第二行的类型}]
     var  jsonInput=json(inputArr)
     //解开数组对象使其成为innerHTML可用的数据
-    console.log(inLine(jsonInput))
     return inLine(jsonInput)
     
 }
@@ -107,7 +132,7 @@ function json(input_arr){
         { pattern: /^#{3}\s+(.*)/, name: 'h3' },
         { pattern: /^#{4}\s+(.*)/, name: 'h4' },
         { pattern: /^#{5}\s+(.*)/, name: 'h5' },
-        { pattern: /^#{5}\s+(.*)/, name: 'h6' },
+        { pattern: /^#{6}\s+(.*)/, name: 'h6' },
         { pattern: /^[-*]\s+(.*)/, name: 'ul' },
         { pattern: /^[0-9]+\.+(.*)/, name: 'ol' },
         { pattern: /^={6,}/, name: 'header'},//上一行是主标题
@@ -191,9 +216,42 @@ function inLine(json_Input){
             result.push(content)
             continue;
         }
-        result.push('<'+obj.type+'>'+obj.content+'</'+obj.type+'>')
+        result.push('<'+obj.type+'>'+replaceStyle(obj.content)+'</'+obj.type+'>')
     }
+    console.log(result)
     return result.join("")
+}
+//替换内联样式
+function replaceStyle(content){
+    var stylePattern=[
+        { pattern:/\*\*(.+)\*\*/, name : 'strong'},
+        { pattern:/~~(.+)~~/, name : 's'},
+        { pattern:/__(.+)__/, name : 'em'},
+        { pattern:/`(.+)`/, name : 'code'},
+    ]
+    var linkPattern=[
+        { pattern:/!\[(.+)\]\((.+)\)/,name :'img'},
+        { pattern:/\[(.+)\]\((.+)\)/,name :'web'},
+    ]
+    for(var obj of stylePattern){
+        if(obj.pattern.test(content)){
+            content=content.replace(obj.pattern,'<'+obj.name+'>'+RegExp.$1+'</'+obj.name+'>')
+        }
+    }
+    for(var obj of linkPattern){
+        if(obj.pattern.test(content)){
+           switch(obj.name){
+                case 'img':
+                    content=content.replace(obj.pattern,'<img src='+RegExp.$2+'>')
+                    break;
+                case 'web':
+                    content=content.replace(obj.pattern,'<a href='+RegExp.$2+'>'+RegExp.$1+'</a>')
+                    break;
+           }
+           break;
+        }
+    }
+    return content
 }
 //执行监听
 oinput.addEventListener('input',updata)
