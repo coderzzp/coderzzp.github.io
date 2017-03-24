@@ -4,7 +4,7 @@
 ## 任务描述
 
 通过修改图表中的样式实现自定义的统计图表，如下示意图：
-![aa](https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png)
+![aa](https://coderzzp.github.io/img/data-1487156025041-rkZHQ3-Fg (2).png)
 修改图中的 [坐标轴](http://echarts.baidu.com/option.html#yAxis)，[标题](http://echarts.baidu.com/option.html#title)，[图例](http://echarts.baidu.com/option.html#legend)，[系列颜色](http://echarts.baidu.com/option.html#color) 等组件样式，实现一个自定义样式的统计图表
 
 ## 任务注意事项
