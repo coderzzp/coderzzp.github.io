@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+    <link type="text/css" rel="stylesheet" href="https://apps.bdimg.com/libs/bootstrap-glyphicons/1.0/css/bootstrap-glyphicons.css">
+    <style type="text/css">
+        html,body{height:100%;}
+        body,div,textarea,span{margin: 0;padding: 0;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";font-size: 16px/1.5}
+        .wraper{
+            overflow: hidden;
+            height:100%;
+            width: 100%
+        }
+        .left,.right{
+            width: 50%;
+            height:100%;
+            float: left;
+        }
+        /*这里用到了ie盒子模型*/
+        .left{background-color: #fff;
+            border-right: 1px solid #d9d9d9;
+            box-sizing:border-box
+        }
+        .right{
+            background-color: #fcfaf2;
+            overflow: scroll;
+        }
+        .left .title{
+            width:90%;
+            margin: 20px 20px;
+            text-overflow: ellipsis;
+            font-size: 30px;
+            white-space: nowrap;
+            border:none;
+            line-height: 30px;
+            outline:none
+        }
+        .left .nav{
+            height: 38px;
+            width: 100%;
+            background-color: #dedede;
+            cursor: pointer;
+        }
+        .left .nav .glyphicon{
+            line-height: 38px;
+            padding: 9.5px 15px;
+            vertical-align:middle;
+            font-size: 14px;
+            color: #555555
+        }
+        .left .nav .glyphicon:hover{
+            color:#dedede;
+            background-color:#555555;
+        }
+        .left .nav .nav_right{
+            float: right;
+        }
+        .left .nav .nav_title{
+            position: absolute;
+            top:42px;
+            background-color: #2d2d2d;
+            opacity: 0.8;
+            color: #f9f9f9;
+            border-radius:5px;
+            padding: 5px 10px;
+        }
+        .left .expandingArea{
+             position:relative;
+             width: 100%;
+             height: 500px;
+
+        }
+        .left .pre{
+            width: 100%;
+            word-wrap:break-word;
+            visibility: hidden;
+        }
+        .left textarea{
+            font-family: consolata, Courier, monospace;
+            border: none;
+            resize: none;
+            outline: none;
+            position:absolute;
+            top:0;
+            left:0;
+            width: 100%;
+            height:100%;
+            padding: 20px;
+            box-sizing:border-box;
+        }
+        .right #outer{width: 99%;word-wrap:break-word; padding: 20px;            box-sizing:border-box;}
+        .right .h0{font-size:40px;margin-left: 20px;}
+        .right blockquote{border-left: 0.25em solid #ddd}
+    </style>
+</head>
+<body>
+<div class="wraper">
+    <div class='left'>
+        <input class="title" type="text">
+        <div class="nav">
+            <span class="glyphicon glyphicon-picture" data-title="将图片直接拖动到编辑区域即可上传"></span>
+            <span class="glyphicon glyphicon-arrow-left" data-title="撤销"></span>
+            <span class="glyphicon glyphicon-repeat"data-title="重做"></span>
+            <span class="glyphicon glyphicon-time" data-title="历史记录"></span>
+            <div class="nav_right">
+                <span class="glyphicon glyphicon-chevron-left" data-title="返回"></span>
+                <span class="glyphicon glyphicon-resize-full" data-title="切换到写作模式"></span>
+                <span class="glyphicon glyphicon-ok " data-title="发布文章">发布文章</span>
+            </div>
+        </div>
+        <div class="expandingArea ">
+            <div class="pre"><span></span><br></div>
+            <textarea id="input">
+# H1
+## H2
+### H3
+#### H4
+##### H5
+###### H6
+
+**********************
+一级标题
+======================
+二级标题
+======================
+
+* item1
+* item2
+* item3
+
+1. item1
+2. item2
+3. item3
+
+**********************
+![rem](https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png)
+
+
+**********************
+[这里是图片地址](https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png)
+*****
+
+**粗体粗体粗体粗体粗体粗体粗体粗体粗体粗体粗体粗体粗体粗体**<br>
+
+__斜体斜体斜体斜体斜体斜体斜体斜体斜体斜体斜体斜体斜体斜体斜体__<br>
+
+~~删除线删除线删除线删除线删除线删除线删除线删除线删除线删除线~~<br>
+
+> 单行名言单行名言单行名言单行名言单行名言
+
+> 多行名言多行名言多行名言多行名言多行名言
+> 多行名言多行名言多行名言多行名言多行名言
+> 多行名言多行名言多行名言多行名言多行名言
+
+普通文字普通文字普通文字普通文字普通文字<br>
+普通文字普通文字普通文字普通文字普通文字<br>
+普通文字普通文字普通文字普通文字普通文字<br>
+普通文字普通文字普通文字普通文字普通文字<br>
+
+**********************
+            </textarea>
+        </div>
+    </div>
+    <div class="right">
+        <div id="outer"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/2.1.1/jquery.js"></script>
+<script type="text/javascript" src="https://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+//////////////////////////////////////////////////////全局对象///////////////////////////////////////////////////
+var oexpandingArea=document.getElementsByClassName("expandingArea")[0]
+var otitle=document.getElementsByClassName("title")[0]
+var aglyphicon=document.getElementsByClassName("glyphicon")
+var oinput=document.getElementById("input")
+var outer=document.getElementById("outer")
+var oright=document.getElementsByClassName("right")[0]
+var opre=document.getElementsByTagName('pre')[0]
+var ospan=oexpandingArea.getElementsByTagName("span")[0]
+var onav=document.getElementsByClassName("nav")[0]
+///////////////////////////////////////////添加标题事件///////////////////////////////////////////////////
+otitle.oninput=function(){
+    //单例模式
+    var h0=oright.getElementsByTagName("h1")[0]||document.createElement("h1")
+    h0.innerText=this.value
+    oright.insertBefore(h0,outer)
+    
+}
+////////////////////////////////////////////标签栏///////////////////////////////////////////////////
+for(var i=0;i<aglyphicon.length;i++){
+    aglyphicon[i].onmouseover=function(){
+        var obox=document.createElement('div')
+        obox.className="nav_title"
+        var otitle=this.getAttribute ( 'data-title' ) ;
+        obox.innerHTML=otitle
+        console.log(this.offsetLeft)
+        console.log(obox)
+        obox.style.left=this.offsetLeft+'px';
+        onav.appendChild(obox)
+        this.onmouseout=function(){
+            onav.removeChild(onav.lastChild)      
+        }
+    }
+}
+//////////////////////////////////////////拖拽本地图片////////////////////////////////////////////
+oexpandingArea.addEventListener('dragover', function (e) {
+  e.preventDefault(); // 必须阻止默认事件
+}, false);
+oexpandingArea.addEventListener('drop', function (e) {
+        alert("1")
+      e.preventDefault(); // 阻止默认事件
+      var file = e.dataTransfer.files[0]; 
+      var reader=new FileReader();
+      reader.onload=function(){
+        // 通过 reader.result 来访问生成的 DataURL
+         var url=reader.result;
+         setImageURL(url);
+         oinput.value+='![图片]'+'('+url+')'
+     };
+     reader.readAsDataURL(file);
+  // code
+}, false);
+///////////////////////////////////////////mark//////////////////////////////////////////////
+function updata(){
+    ospan.innerText=this.value
+    outer.innerHTML=mark(this.value)
+}
+function mark(source){
+    //将输入内容用回车号分成数组
+    var inputArr = source.split('\n');
+    //判定内容，并且将内容封装到一个数组对象中[{第一行的内容，第一行的类型},{第二行的内容，第二行的类型}]
+    var  jsonInput=json(inputArr)
+    //解开数组对象使其成为innerHTML可用的数据
+    return inLine(jsonInput)
+    
+}
+function json(input_arr){
+    //存放内容以及名称
+    var result=[]
+    //存放上一行的对象(用于hearder)
+    var last
+    var blockPatterns=[
+        //注意这里的判断顺序（）
+        { pattern: /^#\s+(.*)/, name: 'h1' },
+        { pattern: /^#{2}\s+(.*)/, name: 'h2' },
+        { pattern: /^#{3}\s+(.*)/, name: 'h3' },
+        { pattern: /^#{4}\s+(.*)/, name: 'h4' },
+        { pattern: /^#{5}\s+(.*)/, name: 'h5' },
+        { pattern: /^#{6}\s+(.*)/, name: 'h6' },
+        { pattern: /^>\s+(.*)/, name: 'blockquote' },
+        { pattern: /^[-*]\s+(.*)/, name: 'ul' },
+        { pattern: /^[0-9]+\.+(.*)/, name: 'ol' },
+        { pattern: /^={6,}/, name: 'header'},//上一行是主标题
+        { pattern: /^-{6,}/, name: 'subheader'},//上一行是副标题
+        { pattern: /^\*{3,}/, name: 'hr'},
+        { pattern: /(.+)/, name: 'para' },
+    ]
+    for(var i in input_arr){
+        for(var obj of blockPatterns){
+           if(obj.pattern.test(input_arr[i])){
+                if(result.length>0){
+                    last=result[result.length-1]
+                }else{
+                    last=null
+                }
+                switch(obj.name){
+                    case 'h1': case 'h2': case 'h3': case 'h4': case 'h5': case 'h6':case 'blockquote':
+                        result.push({content:RegExp.$1,type:obj.name})
+                        //注意break只能退出一层循环
+                        break;
+                    case 'para':
+                        if(!last){
+                            result.push({content:RegExp.$1,type:'p'})
+                            break
+                        }
+                        if (last.type === 'p') {
+                            last.content += (' ' + RegExp.$1);
+                            break;
+                        }else{
+                            result.push({content:RegExp.$1,type:'p'})
+                            break 
+                        }
+                        
+                    case 'header':
+                        if(last){
+                            last.type='h1'
+                        }
+                        break;
+                    case 'subheader':
+                        if(last){
+                            last.type='h2'
+                        }
+                        break;
+                    case 'ul':case 'ol':
+                        if(last){
+                            if(obj.name==last.type){
+                                last.content.push(RegExp.$1)
+                            }else{
+                                result.push({
+                                    content:[RegExp.$1],
+                                    type:obj.name
+                                })
+                            }
+                        }else{
+                            result.push({
+                                content:[RegExp.$1],
+                                type:obj.name
+                            })
+                        }
+                        break;
+                    case 'hr':
+                        result.push({content:' ',type:obj.name})
+                        break;
+                }
+                //一旦test到，就不再test，进行下一行的for循环
+                break
+           }
+        }
+    }
+    return result
+}
+function inLine(json_Input){
+    var result=[]
+    for(var obj of json_Input){
+        if(obj.type==='ul'||obj.type==='ol'){
+            var content='<'+obj.type+'>'
+            for(var oli of obj.content){
+                content+='<li>'+oli+'</li>'
+            }
+            content+='</'+obj.type+'>'
+            result.push(content)
+            continue;
+        }
+        result.push('<'+obj.type+'>'+replaceStyle(obj.content)+'</'+obj.type+'>')
+    }
+    console.log(result)
+    return result.join("")
+}
+//替换内联样式
+function replaceStyle(content){
+    var stylePattern=[
+        { pattern:/\*\*(.+)\*\*/, name : 'strong'},
+        { pattern:/~~(.+)~~/, name : 's'},
+        { pattern:/__(.+)__/, name : 'em'},
+        { pattern:/`(.+)`/, name : 'code'},
+    ]
+    var linkPattern=[
+        { pattern:/!\[(.+)\]\((.+)\)/,name :'img'},
+        { pattern:/\[(.+)\]\((.+)\)/,name :'web'},
+    ]
+    for(var obj of stylePattern){
+        if(obj.pattern.test(content)){
+            content=content.replace(obj.pattern,'<'+obj.name+'>'+RegExp.$1+'</'+obj.name+'>')
+        }
+    }
+    for(var obj of linkPattern){
+        if(obj.pattern.test(content)){
+           switch(obj.name){
+                case 'img':
+                    content=content.replace(obj.pattern,'<img src='+RegExp.$2+'>')
+                    break;
+                case 'web':
+                    content=content.replace(obj.pattern,'<a href='+RegExp.$2+'>'+RegExp.$1+'</a>')
+                    break;
+           }
+           break;
+        }
+    }
+    return content
+}
+//执行监听
+oinput.addEventListener('input',updata)
+//触发一次input
+function trigger(){
+    var e = document.createEvent("MouseEvents");
+    e.initEvent("input", true, true);
+    oinput.dispatchEvent(e);
+}
+trigger()
+///////////////////////////////////////////////////////////////////////////////////////////
+
+// function Mark(id){
+//     this.initialize(id)
+// }
+// Mark.prototype={
+//     initialize:function(id){
+//         this.oinput=document.getElementById(id)
+//         this.oexpandingArea=document.getElementsByClassName("expandingArea")[0]
+//         this.otitle=document.getElementsByClassName("title")[0]
+//         this.outer=document.getElementById("outer")
+//         this.oright=document.getElementsByClassName("right")[0]
+//         this.opre=document.getElementsByTagName('pre')[0]
+//         this.ospan=this.oexpandingArea.getElementsByTagName("span")[0]
+//         this.catch(this.oinput)
+//     },
+//     //监听事件
+//     catch:function(target){
+//         va
+//         target.oninput=function(){
+//             console.log(this)
+//         }
+//     },
+//     //更新数据
+//     updata:function(){
+//         //因为是事件监听，所以这里的this指的是触发事件的对象
+//         //请问：这里如何得到表示实例的this
+//     }
+// }
+// var start=new Mark('input')
+</script>
+</html>
