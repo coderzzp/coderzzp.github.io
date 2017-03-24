@@ -10,5 +10,5 @@
 注意测试不同情况，尤其是极端情况下的效果
 尽量不要使用第三方库，包括jQuery
 ## 参考资料
-[oncontextmenu](http://www.runoob.com/jsref/event-oncontextmenu.html): 了解JavaScript中oncontextmenu的基本知识
+[oncontextmenu](http://www.runoob.com/jsref/event-oncontextmenu.html): 了解JavaScript中oncontextmenu的基本知识<br>
 [event](http://xchb.work/2016/07/25/event%E9%82%A3%E4%BA%9B%E4%BA%8B/)那些事 收集整理的事件相关资料
