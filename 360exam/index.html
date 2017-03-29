@@ -30,6 +30,9 @@
 <script src="jquery-2.1.4.min.js"></script>
 <script src="zzp.js"></script>
 <script>
+  //保存中间密码
+  var json={}
+  //调用
   $("#gesturepwd").GesturePasswd({
       backgroundImage:"url(img/11.jpg)",  //背景色
       color:"#F7A136",   //主要的控件颜色
@@ -37,17 +40,16 @@
       pointRadii:44, //大圆点被选中时显示的圆心的半径
       space:136,  //大圆点之间的间隙
       width:980,   //整个组件的宽度
-      height:1600,  //整个组件的高度
+      height:1400,  //整个组件的高度
       roundColor:"#FFA726",
       lineColor:"#DF3134",   //用户划出线条的颜色
-      zindex :100  //整个组件的css z-index属性
     });
-  var json={}
   function timeMessage(msg){
     setTimeout(function(){
         $("#message").text(msg)
     },500); 
   }
+  //监听事件
   $("input").change(
     function(e){
       if($("input:checked").val()=="1"){
@@ -88,7 +90,9 @@
       }
     }
   )
+//触发一次监听
 $("input").triggerHandler("change")
+//取消默认页面下拉
 $('body').on('touchmove', function (event) {
     event.preventDefault();
 });

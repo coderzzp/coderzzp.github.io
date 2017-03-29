@@ -1,9 +1,6 @@
-
-
-;
-(function ($) {
-
-
+(function(root,factory,plug){
+    factory(root.jQuery,plug);
+})(window,function($,plug){
     var GesturePasswd= function (element, options) {
         this.$element	= $(element);
         this.options	= options;
@@ -21,32 +18,20 @@
             "overflow":"hidden",
             "cursor":"default"
         });
-
-
-        //选择器规范
-        if(! $(element).attr("id"))
-            $(element).attr("id",(Math.random()*65535).toString());
         this.id="#"+$(element).attr("id");
-
-
         //记录点的构造函数
         var Point = function (x,y){
             this.x  =x;this.y=y
         };
-
+        //记录密码结果
         this.result="";
         //记录所有的点
         this.pList=[];
         //记录已经经过了的点
         this.sList=[];
-
         this.$element.prepend('<canvas class="main-c" width="'+options.width+'" height="'+options.height+'" >');
-        //this.$element.append('<canvas class="main-p" width="'+options.width+'" height="'+options.height+'" >');
         this.$c= $(this.id+" .main-c")[0];
         this.$ctx=this.$c.getContext('2d');
-
-
-
         //画基本图形
         this.initDraw=function(){
             this.$ctx.strokeStyle=this.color;
@@ -65,7 +50,7 @@
         };
         this.initDraw();
         //this.$ctx.stroke();
-        //判断是否经过图上的九个点
+        //判断是否经过图上的九个点，是则返回该店
         this.isIn=function(x,y){
 
             for (var p in that.pList){
@@ -121,10 +106,8 @@
                 this.pointDraw();
                 this.lineDraw();
             }
-
         };
-
-
+        //
         this.draw=function(x,y){
             that.$ctx.clearRect(0,0,that.options.width,that.options.height);
             that.$ctx.beginPath();
@@ -138,7 +121,7 @@
         };
 
 
-        //在list中找点，有则返回位置，无返回false
+        //在list中找点，有则返回位置，无则返回false
         this.pointInList=function(poi,list){
             for (var p in list){
                 if( poi["x"] == list[p]["x"] && poi["y"] == list[p]["y"]){
@@ -147,7 +130,7 @@
             }
             return false;
         };
-
+        //默认touch为false
         this.touched=false;
         $(this.id).on ("mousedown touchstart",{that:that},function(e){
             e.data.that.touched=true;
@@ -183,6 +166,7 @@
                 var p = e.data.that.isIn(x, y);
                 // console.log(x)
                 if(p != 0 ){
+                    //如果sList中不存在p这个点，则添加这个点
                     if ( !e.data.that.pointInList(p,e.data.that.sList)){
                         e.data.that.sList.push(p);
                     }
@@ -238,30 +222,27 @@
                 that.initDraw()
             },500)
         });
-
-
+        GesturePasswd.DEFAULTS = {
+            backgroundImage:"none",
+            color:"#FFFFFF",
+            roundRadii:46,
+            pointRadii:44,
+            space:136,
+            width:980,
+            height:1400,
+            lineColor:"#DF3134",
+            roundColor:"#FFA726",
+      //       backgroundImage:"url(img/11.jpg)",  //背景色
+      // color:"#F7A136",   //主要的控件颜色
+      // roundRadii:46,    //大圆点的半径
+      // pointRadii:44, //大圆点被选中时显示的圆心的半径
+      // space:136,  //大圆点之间的间隙
+      // width:980,   //整个组件的宽度
+      // height:1600,  //整个组件的高度
+      // roundColor:"#FFA726",
+      // lineColor:"#DF3134",   //用户划出线条的颜色
+        };
     };
-
-
-    GesturePasswd.DEFAULTS = {
-        zindex :100,
-        roundRadii:25,
-        pointRadii:6,
-        space:30,
-        width:240,
-        height:240,
-        lineColor:"#00aec7",
-        backgroundColor:"#252736",
-        color:"#FFFFFF"
-    };
-
-
-
-
-
-
-
-
     function Plugin(option,arg) {
         return this.each(function () {
             var $this   = $(this);
@@ -272,11 +253,5 @@
             if (action)	data[action](arg);
         })
     }
-
-
-    $.fn.GesturePasswd             = Plugin;
-    $.fn.GesturePasswd.Constructor = GesturePasswd;
-
-
-
-})(jQuery);
+    $.fn[plug]= Plugin;
+},"GesturePasswd");
