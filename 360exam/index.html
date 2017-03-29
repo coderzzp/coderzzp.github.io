@@ -3,39 +3,7 @@
 <head lang="en">
   <meta charset="UTF-8">
   <title>360手势解锁</title>
-  <style type="text/css">
-    div,canvas,center{
-      margin: 0;
-      padding: 0
-    }
-    body{
-      font-family:"微软雅黑";
-    }
-    center{
-      line-height: 100px;
-      height:100px;
-      font-size: 50px; 
-      border-bottom: 10px solid #bcbcbc;
-    }
-    #message{
-      position: absolute;
-      top: 900px;
-      width:100%;
-      text-align:center;
-      font-size: 46px; 
-    }
-    #choose{
-      position: absolute;
-      left: 100px;
-      bottom: 300px;
-      font-size: 46px;
-    }
-    #choose input{
-      width: 30px;
-      height: 30px;
-      margin-right: 20px;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
   <center>手势密码</center>
@@ -56,24 +24,24 @@
 $(window).load(function() {
     //保存中间密码
     var json={}
-    //调用
+    //调用GesturePasswd.js
     $("#gesturepwd").GesturePasswd({
-        backgroundImage:"url(img/11.jpg)",  //背景色
-        color:"#F7A136",   //主要的控件颜色
+        backgroundImage:"url(img/11.jpg)",  //背景
+        color:"#F7A136",   //主要的颜色
         roundRadii:46,    //大圆点的半径
         pointRadii:44, //大圆点被选中时显示的圆心的半径
         space:136,  //大圆点之间的间隙
-        width:980,   //整个组件的宽度
-        height:1400,  //整个组件的高度
-        roundColor:"#FFA726",
-        lineColor:"#DF3134",   //用户划出线条的颜色
+        width:980,   //宽度
+        height:1400,  //高度
+        roundColor:"#FFA726", //划出的圆的填充色
+        lineColor:"#DF3134",   //划出线条的颜色
       });
     function timeMessage(msg){
       setTimeout(function(){
           $("#message").text(msg)
       },500); 
     }
-    //监听事件
+    //通过radio的改变选择不同的监听
     $("input").change(
       function(e){
         if($("input:checked").val()=="1"){

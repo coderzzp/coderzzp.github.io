@@ -49,7 +49,6 @@
             this.initImg=this.$ctx.getImageData(0,0,this.options.width,this.options.height);
         };
         this.initDraw();
-        //this.$ctx.stroke();
         //判断是否经过图上的九个点，是则返回该店
         this.isIn=function(x,y){
 
@@ -119,8 +118,6 @@
             that.$ctx.lineTo(x,y);
             that.$ctx.stroke();
         };
-
-
         //在list中找点，有则返回位置，无则返回false
         this.pointInList=function(poi,list){
             for (var p in list){
@@ -175,9 +172,8 @@
                 console.log( e.data.that.sList);
                 e.data.that.draw(x, y);
             }
-
         });
-            $(this.id).on('passwdWrong',{that:that}, function(e) {
+        $(this.id).on('passwdWrong',{that:that}, function(e) {
             that.$ctx.clearRect(0,0,that.options.width,that.options.height);
             that.$ctx.beginPath();
             that.$ctx.putImageData(that.initImg,0,0);
@@ -185,13 +181,11 @@
             that.result="";
             that.pList=[];
             that.sList=[];
-
             setTimeout(function(){
                 that.$ctx.clearRect(0,0,that.options.width,that.options.height);
                 that.$ctx.beginPath();
                 that.initDraw()
             },500)
-
         });
         $(this.id).on('passwdRight',{that:that}, function(e) {
             that.$ctx.clearRect(0,0,that.options.width,that.options.height);
@@ -217,6 +211,7 @@
                 that.initDraw()
             },500)
         });
+        //默认参数
         GesturePasswd.DEFAULTS = {
             backgroundImage:"none",
             color:"#FFFFFF",
@@ -227,25 +222,13 @@
             height:1400,
             lineColor:"#DF3134",
             roundColor:"#FFA726",
-      //       backgroundImage:"url(img/11.jpg)",  //背景色
-      // color:"#F7A136",   //主要的控件颜色
-      // roundRadii:46,    //大圆点的半径
-      // pointRadii:44, //大圆点被选中时显示的圆心的半径
-      // space:136,  //大圆点之间的间隙
-      // width:980,   //整个组件的宽度
-      // height:1600,  //整个组件的高度
-      // roundColor:"#FFA726",
-      // lineColor:"#DF3134",   //用户划出线条的颜色
         };
     };
     function Plugin(option,arg) {
         return this.each(function () {
             var $this   = $(this);
             var options = $.extend({}, GesturePasswd.DEFAULTS, typeof option == 'object' && option);
-            var data    = $this.data('GesturePasswd');
-            var action  = typeof option == 'string' ? option : NaN;
-            if (!data) $this.data('danmu', (data = new GesturePasswd(this, options)));
-            if (action)	data[action](arg);
+            var data    = new GesturePasswd(this, options)
         })
     }
     $.fn[plug]= Plugin;
