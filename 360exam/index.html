@@ -53,94 +53,73 @@
 <script src="jquery-2.1.4.min.js"></script>
 <script src="GesturePasswd.js"></script>
 <script>
-  //保存中间密码
-  var json={}
-  //调用
-  $("#gesturepwd").GesturePasswd({
-      backgroundImage:"url(img/11.jpg)",  //背景色
-      color:"#F7A136",   //主要的控件颜色
-      roundRadii:46,    //大圆点的半径
-      pointRadii:44, //大圆点被选中时显示的圆心的半径
-      space:136,  //大圆点之间的间隙
-      width:980,   //整个组件的宽度
-      height:1400,  //整个组件的高度
-      roundColor:"#FFA726",
-      lineColor:"#DF3134",   //用户划出线条的颜色
-    });
-  function timeMessage(msg){
-    setTimeout(function(){
-        $("#message").text(msg)
-    },500); 
-  }
-  //监听事件
-  $("input").change(
-    function(e){
-      if($("input:checked").val()=="1"){
-        $("#gesturepwd").off("hasPasswd")
-        $("#gesturepwd").on("hasPasswd",function(e,passwd){
-          if(!json.password){
-              json.password=passwd
-              $("#gesturepwd").trigger("passwdAgain");
-              timeMessage("请再次输入手势密码")
-          }else{
-            if(json.password!=passwd){
-              $("#gesturepwd").trigger("passwdWrong");
-              $("#message").text('两次密码输入的不一致')
-              timeMessage("请输入您要设置的密码")
-            }else{
-              $("#gesturepwd").trigger("passwdRight");
-              console.log("我正在设置密码为"+passwd)
-              localStorage.password=passwd
-              $("#message").text('密码设置成功！')
-              timeMessage("请输入您要设置的密码")
-            }
-            delete json.password;
-          }
-        })
-      }else{
-         delete json.password;
-         $("#gesturepwd").off("hasPasswd")
-         $("#gesturepwd").on("hasPasswd",function(e,passwd){
-          console.log(localStorage.password)
-          if(passwd==localStorage.password){
-            $("#gesturepwd").trigger("passwdRight");
-            timeMessage("密码正确！")
-          }else{
-            $("#gesturepwd").trigger("passwdWrong");
-            timeMessage("您输入的密码不正确，请重新输入")
-          }
-        })
-      }
+$(window).load(function() {
+    //保存中间密码
+    var json={}
+    //调用
+    $("#gesturepwd").GesturePasswd({
+        backgroundImage:"url(img/11.jpg)",  //背景色
+        color:"#F7A136",   //主要的控件颜色
+        roundRadii:46,    //大圆点的半径
+        pointRadii:44, //大圆点被选中时显示的圆心的半径
+        space:136,  //大圆点之间的间隙
+        width:980,   //整个组件的宽度
+        height:1400,  //整个组件的高度
+        roundColor:"#FFA726",
+        lineColor:"#DF3134",   //用户划出线条的颜色
+      });
+    function timeMessage(msg){
+      setTimeout(function(){
+          $("#message").text(msg)
+      },500); 
     }
-  )
-//触发一次监听
-$("input").triggerHandler("change")
-//取消默认页面下拉
-$('body').on('touchmove', function (event) {
-    event.preventDefault();
+    //监听事件
+    $("input").change(
+      function(e){
+        if($("input:checked").val()=="1"){
+          $("#gesturepwd").off("hasPasswd")
+          $("#gesturepwd").on("hasPasswd",function(e,passwd){
+            if(!json.password){
+                json.password=passwd
+                $("#gesturepwd").trigger("passwdAgain");
+                timeMessage("请再次输入手势密码")
+            }else{
+              if(json.password!=passwd){
+                $("#gesturepwd").trigger("passwdWrong");
+                $("#message").text('两次密码输入的不一致')
+                timeMessage("请输入您要设置的密码")
+              }else{
+                $("#gesturepwd").trigger("passwdRight");
+                console.log("我正在设置密码为"+passwd)
+                localStorage.password=passwd
+                $("#message").text('密码设置成功！')
+                timeMessage("请输入您要设置的密码")
+              }
+              delete json.password;
+            }
+          })
+        }else{
+           delete json.password;
+           $("#gesturepwd").off("hasPasswd")
+           $("#gesturepwd").on("hasPasswd",function(e,passwd){
+            console.log(localStorage.password)
+            if(passwd==localStorage.password){
+              $("#gesturepwd").trigger("passwdRight");
+              timeMessage("密码正确！")
+            }else{
+              $("#gesturepwd").trigger("passwdWrong");
+              timeMessage("您输入的密码不正确，请重新输入")
+            }
+          })
+        }
+      }
+    )
+    //触发一次监听
+    $("input").triggerHandler("change")
+    //取消默认页面下拉
+    $('body').on('touchmove', function (event) {
+        event.preventDefault();
+    });
 });
-     // if(passwd == "1235789"){
-     //     result=true;
-     // }
-     // else {
-     //      result=false;
-     // }
-
-    // if(result == true){
-    //   $("#gesturepwd").trigger("passwdRight");
-    //   setTimeout(function(){
-
-    //     //密码验证正确后的其他操作，打开新的页面等。。。
-    //     alert("密码正确！")
-    //   },500);  //延迟半秒以照顾视觉效果
-    // }
-    // else{
-    //   $("#gesturepwd").trigger("passwdWrong");
-
-    //   //密码验证错误后的其他操作。。。
-
-    // }
-
-
 </script>
 </html>
