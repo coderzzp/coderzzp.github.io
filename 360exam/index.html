@@ -89,7 +89,9 @@
     }
   )
 $("input").triggerHandler("change")
-
+$('body').on('touchmove', function (event) {
+    event.preventDefault();
+});
      // if(passwd == "1235789"){
      //     result=true;
      // }
