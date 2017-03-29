@@ -177,10 +177,7 @@
             }
 
         });
-
-
-
-        $(this.id).on('passwdWrong',{that:that}, function(e) {
+            $(this.id).on('passwdWrong',{that:that}, function(e) {
             that.$ctx.clearRect(0,0,that.options.width,that.options.height);
             that.$ctx.beginPath();
             that.$ctx.putImageData(that.initImg,0,0);
@@ -196,8 +193,6 @@
             },500)
 
         });
-
-
         $(this.id).on('passwdRight',{that:that}, function(e) {
             that.$ctx.clearRect(0,0,that.options.width,that.options.height);
             that.$ctx.beginPath();
