@@ -44,6 +44,7 @@ $(window).load(function() {
     //通过radio的改变选择不同的监听
     $("input").change(
       function(e){
+        //如果radio选择是第一个
         if($("input:checked").val()=="1"){
           $("#gesturepwd").off("hasPasswd")
           $("#gesturepwd").on("hasPasswd",function(e,passwd){

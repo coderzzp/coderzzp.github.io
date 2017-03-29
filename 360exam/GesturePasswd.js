@@ -110,7 +110,6 @@
         this.draw=function(x,y){
             that.$ctx.clearRect(0,0,that.options.width,that.options.height);
             that.$ctx.beginPath();
-            //that.initDraw();
             that.$ctx.putImageData(this.initImg,0,0);
             that.$ctx.lineWidth=4;
             that.pointDraw(that.options.roundColor);
@@ -127,7 +126,7 @@
             }
             return false;
         };
-        //默认touch为false
+        //以下为系统事件监听
         this.touched=false;
         $(this.id).on ("mousedown touchstart",{that:that},function(e){
             e.data.that.touched=true;
@@ -152,8 +151,6 @@
                  $("#gesturepwd").trigger("passwdWrong");
             }
         });
-
-        //
         $(this.id).on('touchmove mousemove',{that:that}, function(e) {
             if(e.data.that.touched){
                 var x= e.pageX || e.originalEvent.targetTouches[0].pageX ;
@@ -173,6 +170,7 @@
                 e.data.that.draw(x, y);
             }
         });
+        //以下为自定义事件监听
         $(this.id).on('passwdWrong',{that:that}, function(e) {
             that.$ctx.clearRect(0,0,that.options.width,that.options.height);
             that.$ctx.beginPath();
