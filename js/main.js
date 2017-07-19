@@ -2,7 +2,7 @@
 var $loading=$(".loading").eq(0);
 var $progressBar=$(".progress-bar");
 //设置进度条的函数
-var setProgress=function(prg){
+var setProgress=(prg)=>{
 	 $progressBar.css("width",prg+"%");
 }
 var prg=0;
@@ -11,16 +11,25 @@ var timer=0;
 //1.分两个过程，第二过程(即window.onload之后)开始加速
 progress([80,90],[1,3],100)//
 window.onload=function(){
-//2.设置一个延迟，不然根本还来不及看到100%效果的实现，页面就sildeup了。这里显然应该用一个匿名函数
-	progress(100,[1,5],30,function(){setTimeout(function(){
+//2.设置一个延迟，不然根本还来不及看到100%效果的实现，页面就sildeup了。
+	progress(100,[1,5],30,()=>{setTimeout(function(){
 		$loading.slideUp()
 	},1000)})
 }
+//如果页面超过3000ms不进入onload，直接开始推进
+window.setTimeout(() => {  
+  progress(100, [1, 5], 10, () => {
+    window.setTimeout(() => {  // 
+      $loading.slideUp()
+    }, 1000)
+  })
+}, 3000)
+
 //封装后的执行函数
 function progress(dist,speed,delay,callback){
 	var _dist=random(dist);
+  var _speed=random(speed);
 	var _delay=random(delay);
-	var _speed=random(speed);
 	window.clearInterval(timer);
 	timer=window.setTimeout(function(){
 		if(prg+_speed>=_dist){
@@ -32,7 +41,6 @@ function progress(dist,speed,delay,callback){
 			progress(dist,speed,delay,callback)
 		}
 		setProgress(parseInt(prg))
-		console.log(prg)
 	},_delay)
 }
 //3.随机函数，让进度条保持动态的
