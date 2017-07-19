@@ -1,4 +1,4 @@
-//loading
+//假loading
 var $loading=$(".loading").eq(0);
 var $progressBar=$(".progress-bar");
 //设置进度条的函数

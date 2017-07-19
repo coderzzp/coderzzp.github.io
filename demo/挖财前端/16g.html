@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style type="text/css">
+    div,ul,li{
+      margin: 0;
+      padding:0;
+    }
+    ul,li{
+      list-style: none;
+    }
+    li{
+      width: 125px;
+      height: 100px;
+      border: 1px solid #000;
+    }
+    #container{
+      position: relative;
+      width: 508px;
+      height: 408px;
+      margin: 0 auto;
+       overflow: auto;
+    }
+    #container li{
+      float: left;
+    }
+    .hig{overflow:hidden;border:1px dashed yellow;}
+  </style>
+</head>
+<body>
+  <div id="container">
+    <ul id="letter">
+      <li id="A">A</li>
+      <li id="B">B</li>
+      <li id="C">C</li>
+      <li id="D">D</li>
+      <li class="1">1</li>
+      <li class="4">4</li>
+      <li class="6">6</li>
+      <li class="9">9</li>
+      <li class="2">2</li>
+      <li class="5">5</li>
+      <li class="7">7</li>
+      <li class="10">10</li>
+      <li class="3">3</li>
+      <li class="6">6</li>
+      <li class="8">8</li>
+      <li class="11">11</li>
+    </ul>
+  </div>
+</body>
+<script type="text/javascript">
+  //修复bug，拖动未完成动画的上一个dom时，会产生抖动
+  var lastObj
+  //存储位置
+  zIndex=1
+  var aPos=[]
+  var aLi=document.getElementsByTagName('li')
+  //布局转换
+  for (i = 0; i < aLi.length; i++)
+  {
+    aLi[i].index = i;
+    //列
+    aLi[i].col=i%4
+    //行
+    aLi[i].row=Math.floor(i/4)
+    aLi[i].style.top = aLi[i].offsetTop + "px"; 
+    aLi[i].style.left = aLi[i].offsetLeft + "px";
+    aPos.push({"left":aLi[i].offsetLeft, "top":aLi[i].offsetTop})
+  } 
+  for (i = 0; i < aLi.length; i++)
+  {
+    aLi[i].style.position = "absolute";
+    aLi[i].style.margin = "0";
+    drag(aLi[i])
+  }
+
+
+  function drag(obj, handle)
+    {
+      //交换类型(1是行交换，2是列交换)
+      var type;
+      var handle = handle || obj;
+      handle.style.cursor = "move"; 
+      handle.onmousedown = function (event)
+      { 
+        //修复bug，清除setInterval
+        clearInterval(obj.timer)
+        lastObj=obj
+        //归0
+        type=0
+        obj.id&&type++
+        var event = event || window.event;
+        var disX = event.clientX - this.offsetLeft;
+        var disY = event.clientY - this.offsetTop;
+        var oNear = null;
+        obj.style.zIndex = zIndex++;
+        document.onmousemove = function (event)
+        { 
+          var event = event || window.event;      
+          var iL = event.clientX - disX;
+          var iT = event.clientY - disY;
+          var maxL = obj.parentNode.clientWidth - obj.offsetWidth;
+          var maxT = obj.parentNode.parentNode.clientHeight - obj.offsetHeight;      
+          iL < 0 && (iL = 0);
+          iT < 0 && (iT = 0);
+          iL > maxL && (iL = maxL);
+          iT > maxT && (iT = maxT);
+          obj.style.left = iL + "px";
+          obj.style.top = iT + "px";        
+  
+          for (i = 0; i < aLi.length; i++) aLi[i].className = "";
+          
+          oNear = findNearest(obj);
+          oNear && (oNear.className = "hig");    
+          return false
+        };    
+        document.onmouseup = function ()
+        { 
+          //修复bug：如果不存在最近dom（一般来说是click一下），dom会继续跟随鼠标移动
+          if(!oNear){
+            document.onmousemove =null
+            return false;
+          }
+          type&&(oNear.id&&(type=2))||(oNear.id&&(type=1))
+          document.onmousemove = null;
+          document.onmouseup = null;
+          if (oNear)
+          {
+            // var tIndex = obj.index;         
+            // obj.index = oNear.index;
+            // oNear.index = tIndex;
+            // startMove(obj, aPos[obj.index]);
+            // startMove(oNear, aPos[oNear.index]);
+            // oNear.className = "";
+            if(type==0){
+              changePos(obj,oNear)
+              startMove(obj, aPos[obj.index]);
+              startMove(oNear, aPos[oNear.index]);
+              oNear.className = "";
+            }
+            //row行交换
+            if(type==1){
+              // var tRow = obj.row;         
+              // obj.row = oNear.row;
+              // oNear.row = tRow;
+              // obj_top=aPos[obj.index].top
+              // oNear_top=aPos[oNear.index].top
+              var obj_row=obj.row;
+              var oNear_row=oNear.row;
+              //存储同一行的元素
+              var obj_row_arr=[]
+              var oNear_row_arr=[]
+              //找出同一行的元素
+              aLi=sort(aLi)
+              for(var i=0;i<aLi.length;i++){
+                if(aLi[i].row==obj_row){
+                  obj_row_arr.push(aLi[i])
+                }
+              }
+              for(var i=0;i<aLi.length;i++){
+                if(aLi[i].row==oNear_row){
+                  oNear_row_arr.push(aLi[i])
+                }
+              }
+              //根据对应位置交换元素
+              for(var i=0;i<4;i++){
+                var _obj=obj_row_arr[i];
+                var _oNear=oNear_row_arr[i]
+                changePos(_obj,_oNear)
+                // console.log(_obj,aPos[_obj.index])
+                // console.log(_oNear, aPos[_oNear.index])
+                startMove(_obj, aPos[_obj.index]);
+                startMove(_oNear, aPos[_oNear.index]);
+              }
+            }
+            if(type==2){
+              // var tRow = obj.row;         
+              // obj.row = oNear.row;
+              // oNear.row = tRow;
+              // obj_top=aPos[obj.index].top
+              // oNear_top=aPos[oNear.index].top
+              var obj_col=obj.col;
+              var oNear_col=oNear.col;
+              //存储同一行的元素
+              var obj_col_arr=[]
+              var oNear_col_arr=[]
+              //找出同一行的元素
+              aLi=sort(aLi)
+              for(var i=0;i<aLi.length;i++){
+                if(aLi[i].col==obj_col){
+                  obj_col_arr.push(aLi[i])
+                }
+              }
+              for(var i=0;i<aLi.length;i++){
+                if(aLi[i].col==oNear_col){
+                  oNear_col_arr.push(aLi[i])
+                }
+              }
+              //根据对应位置交换元素
+              for(var i=0;i<4;i++){
+                var _obj=obj_col_arr[i];
+                var _oNear=oNear_col_arr[i]
+                changePos(_obj,_oNear)
+                // console.log(_obj,aPos[_obj.index])
+                // console.log(_oNear, aPos[_oNear.index])
+                startMove(_obj, aPos[_obj.index]);
+                startMove(_oNear, aPos[_oNear.index]);
+              }
+            }
+          }
+          else
+          {
+            startMove(obj, aPos[obj.index])
+          }     
+          handle.releaseCapture && handle.releaseCapture()
+        };    
+        this.setCapture && this.setCapture();   
+        return false
+      }
+    }
+  function findNearest(obj)
+  {
+    var filterLi = [];
+    var aDistance = [];
+    
+    for (i = 0; i < aLi.length; i++) aLi[i] != obj && (isButt(obj, aLi[i]) && (aDistance.push(getDistance(obj, aLi[i])), filterLi.push(aLi[i]))); 
+      
+    var minNum = Number.MAX_VALUE;
+    var minLi = null;
+    
+    for (i = 0; i < aDistance.length; i++) aDistance[i] < minNum && (minNum = aDistance[i], minLi = filterLi[i]); 
+      
+    return minLi
+  } 
+    //求两点之间的距离
+  function getDistance(obj1, obj2)
+  {
+    var a = (obj1.offsetLeft + obj1.offsetWidth / 2) - (obj2.offsetLeft + obj2.offsetWidth / 2);
+    var b = (obj1.offsetTop + obj1.offsetHeight / 2) - (obj2.offsetTop + obj2.offsetHeight / 2);
+    return Math.sqrt(a * a + b * b)
+  }
+
+  //碰撞检测
+  function isButt(obj1, obj2)
+  {
+    var l1 = obj1.offsetLeft;
+    var t1 = obj1.offsetTop;
+    var r1 = obj1.offsetLeft + obj1.offsetWidth;
+    var b1 = obj1.offsetTop + obj1.offsetHeight;
+    
+    var l2 = obj2.offsetLeft;
+    var t2 = obj2.offsetTop;
+    var r2 = obj2.offsetLeft + obj2.offsetWidth;
+    var b2 = obj2.offsetTop + obj2.offsetHeight;
+    
+    return !(r1 < l2 || b1 < t2 || r2 < l1 || b2 < t1)
+  }
+  function startMove(obj, pos, onEnd)
+  {
+    clearInterval(obj.timer);
+    obj.timer = setInterval(function ()
+    {
+      doMove(obj, pos, onEnd)
+    }, 30)  
+  }
+  function doMove(obj, pos, onEnd)
+  { 
+    var iCurL = getStyle(obj, "left");
+    var iCurT = getStyle(obj, "top");
+    var iSpeedL = (pos.left - iCurL) / 5;
+    var iSpeedT = (pos.top - iCurT) / 5;
+    iSpeedL = iSpeedL > 0 ? Math.ceil(iSpeedL) : Math.floor(iSpeedL);
+    iSpeedT = iSpeedT > 0 ? Math.ceil(iSpeedT) : Math.floor(iSpeedT);
+    if (pos.left == iCurL && pos.top == iCurT)
+    {
+      clearInterval(obj.timer);
+      onEnd && onEnd()
+    }
+    else
+    {
+      obj.style.left = iCurL + iSpeedL + "px";
+      obj.style.top = iCurT + iSpeedT + "px"; 
+    }
+  }
+  function getStyle(obj, attr)
+  {
+    return parseFloat(obj.currentStyle ? obj.currentStyle[attr] : getComputedStyle(obj, null)[attr])
+  }
+  function sort(arr){
+      var _copy=[]
+      for(var i=0;i<arr.length;i++){
+        var _index=arr[i].index
+        _copy[_index]=arr[i]
+      }
+      return _copy
+  }
+  function changePos(obj,target){
+    [obj.index,target.index]=[target.index,obj.index];
+    [obj.row,target.row]=[target.row,obj.row];
+    [obj.col,target.col]=[target.col,obj.col]
+  }
+</script>
+</html>

@@ -46,6 +46,7 @@
                 }
             }
             this.$ctx.stroke();
+            //单例模式
             this.initImg=this.$ctx.getImageData(0,0,this.options.width,this.options.height);
         };
         this.initDraw();
