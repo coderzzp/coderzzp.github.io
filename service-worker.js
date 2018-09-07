@@ -20,7 +20,8 @@ this.addEventListener('install', event => {
 this.addEventListener('fetch', event => {
 
   if (event.request.mode === 'navigate' || (event.request.method === 'GET' && event.request.headers.get('accept').includes('text/html'))) {
-      alert('1')  
+      console.log('1')  
+      console.log(fetch)
       event.respondWith(
           fetch(event.request.url).catch(error => {
               // Return the offline page
@@ -29,7 +30,7 @@ this.addEventListener('fetch', event => {
      );
   }
   else{
-        alert('2')
+        console.log('2')
         event.respondWith(caches.match(event.request)
                         .then(function (response) {
                         return response || fetch(event.request);
