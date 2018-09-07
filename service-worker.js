@@ -33,7 +33,7 @@ this.addEventListener('fetch', event => {
         console.log('2')
         event.respondWith(caches.match(event.request)
                         .then(function (response) {
-                        return response || fetch(event.request);
+                        return response || fetch('https://www.apiopen.top/satinApi?type=1&page=1').then(res=>{res.json().then(({data})=>console.log(data[0].text))})
                     })
             );
       }
