@@ -1,0 +1,58 @@
+body{
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background-image: url(./xinzhi.jpeg);
+  /* color: red; */
+  background-size:cover; 
+  background-repeat: no-repeat
+}
+/* #code{
+  background-image: url(./xinzhi.png);
+  height: 667px;
+  background-size:cover;
+  display:none;
+  font-size:16px;
+} */
+#code{
+  display:none;
+  height: 667px;
+  position: relative;        
+}
+.word{
+  line-height: 74px;
+}
+.say{
+  display: block;
+  padding-top: 30px;
+}
+#code:after{
+  z-index: -1;
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: url(./xinzhi.png);
+  background-size:cover;
+  background-repeat: repeat-y;
+  opacity: 0.2;
+}
+#xinfeng{
+  padding-top: 100px;
+  width: 100% ;
+  height: 100%;
+  margin: auto 0;
+}
+#button{
+  display: block;
+  color: pink;
+  /* border: 1px solid pink; */
+  /* border-radius: 5px; */
+  top: 100px;
+  margin: 0 auto;
+}
