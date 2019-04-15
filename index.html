@@ -11,7 +11,8 @@
   <script type="text/javascript" src="love/index.js"></script>
 </head>
 <body>
-    <embed src="./love/baby.mp3" hidden="true" autostart="true" type="audio/mpeg" loop="true" ></embed>
+    <!-- <embed src="./love/baby.mp3" hidden="true" autostart="true" type="audio/mpeg" loop="true" ></embed> -->
+    <audio src="./love/baby.mp3" id="Jaudio" class="media-audio"  loop="loop"></audio>  
     <!-- <audio autoplay="true" loop=""><source src="./love/baby.mp3"></audio> -->
       <!-- <bgsound src="./love/baby.mp3" loop=-1></bgsound> -->
       <!-- <video controls="" autoplay="autoplay" name="media"><source src="./love/baby.mp3" type="audio/mpeg"></video> -->
@@ -68,7 +69,23 @@
   </div>
 </body>
 <script  type="text/javascript">
-
+function audioAutoPlay(id){  
+    var audio = document.getElementById(id),  
+        play = function(){  
+            audio.play();  
+            document.removeEventListener("touchstart",play, false);  
+        };  
+    console.log(audio)
+    audio.play();  
+    document.addEventListener("WeixinJSBridgeReady", function () {  
+        play();  
+    }, false);  
+    document.addEventListener('YixinJSBridgeReady', function() {  
+        play();  
+    }, false);  
+    document.addEventListener("touchstart",play, false);  
+}  
+audioAutoPlay('Jaudio');  
 
 $("#button").on("click",function(){
   var now = new Date()
