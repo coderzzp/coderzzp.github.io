@@ -2,7 +2,7 @@ body{
   margin: 0;
   border: 0;
   padding: 0;
-  background-image: url(./xinzhi.jpeg);
+  /* background-image: url(./xinzhi.png); */
   /* color: red; */
   background-size:cover; 
   background-repeat: no-repeat
@@ -37,7 +37,7 @@ body{
   right: 0;
   bottom: 0;
   left: 0;
-  background-image: url(./xinzhi.png);
+  background-image: url(xinzhi.png);
   background-size:cover;
   background-repeat: repeat-y;
   opacity: 0.2;
