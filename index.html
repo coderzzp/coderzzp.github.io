@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>for 陈颖</title>
+  <title>陈颖又长大一岁啦</title>
   <link type="text/css" rel="stylesheet" href="love/index.css">
   <script type="text/javascript" src="love/jq.min.js"></script>
   <script type="text/javascript" src="love/function.js"></script>
@@ -25,47 +25,59 @@
     <div>
       <button id='button'>open</button>
     </div>
-  </di>
+  </div>
+  <div id="cake">
+    <img  src="love/cake.jpeg"/>
+  </div>
   <div id="code">
-    <span class="say">For 陈颖:</span><br>
+    <span class="say">To :陈颖</span><br>
     <!-- <span class="say"> </span><br><br> -->
-    <!-- <span class="word">
+    <span class="word">
       猜猜我是谁？
     </span><br>
     <span class="word">
       。。。
     </span><br>
     <span class="word">
-      今天是认识你的第66天（蠢到真的一天天再数），有没有觉得时间过得好快啊？转眼就到19年夏天了呢，你还记得吗？
+      今天是认识你的第66天（蠢到真的一天天再数），有没有觉得时间过得好快啊？转眼就到19年夏天了
     </span><br>
     <span class="word">
-      我们第一次见面的那个下午，天气真的很好，心情也格外的好，跟你聊了很久，觉得你是个纯真善良的女孩
+      我还记得我们第一次见面的那个下午阳光真的很好，心情也格外的好，跟你聊了很久，觉得你是个单纯善良的女孩，善良对我来说很重要
     </span><br>
     <span class="word">
-      第三天是情人节，我说我不会这么快结婚，在跟你的聊天中我觉得我没戏了，计划送你的满天星也就此作罢
+      第三天是情人节，有一束没有送出去的满天星
     </span><br>
     <span class="word">
       再之后，我每天去你家喝茶，即使不聊什么也能坐一下午，我们那时都对彼此有好感了吧
     </span><br>
     <span class="word">
-      我们白天喝茶，晚上电话聊天，突然有一天我改变主意了，即使我所有的朋友都反对我，但我还是下了这辈子最重要的决定之一，我就觉得我不能让这么好的女孩等我了。
+      我们白天喝茶，晚上电话聊天，突然有一天我改变主意了，即使我所有的朋友都反对我，但我还是下了这辈子最重要的决定之一，我觉得我不能让这么好的女孩等我了。
     </span><br>
     <span class="word">
       后来的事情好像也是上天自有安排吧，总之我们没有在一起
     </span><br>
     <span class="word">
-      我想说的是，不管怎样，我那时的一切都是真的，想跟你在一起一辈子的勇气是真的，承诺也是真的，但现在的一切感觉也都是真的
+      觉得爱情真的很奇怪，有时候觉得它很难，好像千军万马在前面挡着，有时候又觉得它很简单，简单到觉得是是世界上最简单的事儿
     </span><br>
     <span class="word">
-      感觉你就像被关在城堡里的公主，而我就像个游吟诗人，只是偶尔经过你的城堡周围哼了两首小诗引起了你的注意，但真正能给你幸福的终究还是骑着白马的王子吧（也许有一天我也能骑上白马hh
+      想想过去的那些承诺，喜欢你是真，想和你一辈子在一起也是真，那颗炽热的心和勇气也是真，但现在的心情，也是真的，我也不知道我是不是打算放弃了
     </span><br>
     <span class="word">
-      不说那么多了，今天是你的24岁生日，祝你生日快乐，希望你每天都能开开心心，像我送你的那颗🌻一样永远积极向上，然后呢，希望你能更加自由，做自己喜欢的事情，在自己喜欢的地方上班，不被任何人束缚
-    </span><br> -->
-    <span class="word">
-      Happy birthday!!!🎂🎂🎂
+      有时候感觉你就像在城堡里的公主，而我就像个游吟诗人，只是偶尔经过你的城堡周围哼了两首小诗引起了你的注意，但真正能给你幸福的终究还是骑着白马的王子吧（也许有一天我也能骑上白马hh
     </span><br>
-    <span class="say"><span class="space"></span>——From zzp521</span>
+    <span class="word">
+      不说那么多了，今天是你的24岁生日，🐷你生日快乐啊，欠你的满天星不知道能不能还了，送你一颗永远不会凋谢的向日葵，你说你喜欢永远的事物，我也是啊，喜欢么？
+    </span><br>
+    <span class="word">
+      希望你每天都能开开心心，像那颗🌻一样永远积极阳光，充满力量。然后呢，希望你能更加自由，做自己喜欢的事情，不被任何人束缚
+    </span><br>
+    <span class="word">
+      最后的最后
+    </span><br>
+    <span class="word">
+      Happy birthday!!!🎂🎂🎂 
+    </span><br>
+    <span class="say"><span class="space"></span>——From zzp</span>
   </div>
 </body>
 <script  type="text/javascript">
@@ -86,17 +98,31 @@ function audioAutoPlay(id){
     document.addEventListener("touchstart",play, false);  
 }  
 audioAutoPlay('Jaudio');  
-
+function showcake(){
+  // $("#code").fadeOut()
+  $('#cake').fadeIn(10000)
+}
 $("#button").on("click",function(){
   var now = new Date()
   
   $("#button").fadeOut()
   $("#xinfeng").fadeOut("slow",function(){
     
-    $("#code").show().typewriter()
+    $("#code").show().typewriter(showcake)
 
   });
 })
+// function top1(){
+//     // var len = $('word').length
+//     // var height=$('word')[len].scrollHeight
+//     // // var a = $('body').scrollTop($('body')[0].scrollHeight);
+//     // console.log(height)
+//     var height = $('body')[0].scrollHeight
+//     // console.log(height)
+//     $('html, body').animate({scrollTop:height}, 'slow');
+//     // $('body').scrollTop(1000);
+// };
+// setInterval(top1, 1000)
  
  </script>
 </html>

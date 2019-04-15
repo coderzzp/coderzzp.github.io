@@ -1,5 +1,5 @@
 (function($) {
-	$.fn.typewriter = function() {
+	$.fn.typewriter = function(callback) {
 		this.each(function() {
 			var $ele = $(this), str = $ele.html(), progress = 0;
 			$ele.html('');
@@ -13,6 +13,7 @@
 				$ele.html(str.substring(0, progress) + (progress & 1 ? '_' : ''));
 				if (progress >= str.length) {
 					clearInterval(timer);
+					callback()
 				}
 			}, 100);
 		});
